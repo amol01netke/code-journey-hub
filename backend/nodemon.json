@@ -1,7 +1,8 @@
 {
   "env": {
-    "DB_NAME": "user",
+    "JWT_KEY": "cjhwebsite",
     "DB_USER": "amol01netke",
-    "DB_PASSWORD": "amolsaniya7175"
+    "DB_PASSWORD": "amolsaniya7175",
+    "DB_NAME": "user"
   }
 }
