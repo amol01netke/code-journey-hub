@@ -7,47 +7,24 @@ import {
 } from "react-router-dom";
 import UserAuthentication from "./pages/UserAuthentication/UserAuthentication";
 import UserDashboard from "./pages/UserDashboard/UserDashboard";
-import jwt from "jsonwebtoken";
 
 const App = () => {
-  const [userId, setUserId] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const secretKey = "cjhwebsite";
+  const storedToken = localStorage.getItem("token");
 
   useEffect(() => {
-    const tokenAuthentication = async () => {
-      try {
-        // stored token is accessed here
-        const storedToken = localStorage.getItem("token");
-
-        if (storedToken) {
-          // decode the token
-          const decodedToken = jwt.decode(storedToken);
-
-          // verify the token on the server side
-          const isTokenValid = await jwt.verify(storedToken, secretKey);
-
-          if (isTokenValid) {
-            setUserId(decodedToken.userId);
-            setIsLoggedIn(true);
-          }
-        }
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    tokenAuthentication();
-  }, []);
+    if (storedToken) setIsLoggedIn(true);
+    else setIsLoggedIn(false);
+  }, [storedToken]);
 
   let routes;
   if (isLoggedIn) {
     routes = (
       <Switch>
-        <Route path={`/user-dashboard/${userId}`} exact>
-          <UserDashboard />
+        <Route path="/user-dashboard" exact>
+          <UserDashboard token={storedToken} />
         </Route>
-        <Redirect to={`/user-dashboard/${userId}`} exact />
+        <Redirect to="/user-dashboard" />
       </Switch>
     );
   } else {

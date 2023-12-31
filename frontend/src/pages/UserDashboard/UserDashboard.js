@@ -1,33 +1,47 @@
-import "./UserDashboard.css";
-import React from "react";
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
-const UserDashboard = () => {
-  const { userId } = useParams();
+const UserDashboard = (props) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      const response = await fetch(`http://localhost:8000/api/${userId}`);
+      try {
+        if (!props.token) {
+          console.error("No token available.");
+          return;
+        }
 
-      const data = await response.json();
+        const response = await fetch(
+          "http://localhost:8000/api/users/user-details",
+          {
+            method: "GET",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${props.token}`,
+            },
+          }
+        );
 
-      //set data
-      setFirstName(data.firstName);
-      setLastName(data.lastName);
-      setEmail(data.email);
+        const data = await response.json();
+        console.log(data);
+
+        setFirstName(data.firstName);
+        setLastName(data.lastName);
+        setEmail(data.email);
+      } catch (error) {
+        console.error(error.message);
+      }
     };
 
     fetchUserDetails();
-  }, [userId]);
+  }, [props.token]);
 
   return (
     <React.Fragment>
       <div className="user-dashboard">
-        {`Details of ${userId} :`}
+        {`Details :`}
         {`Name : ${firstName} ${lastName}`}
         {`Email : ${email}`}
       </div>

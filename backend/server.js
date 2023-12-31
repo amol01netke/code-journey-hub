@@ -11,7 +11,7 @@ server.use(express.json());
 //routes
 server.post("/api/register", userController.registerUser);
 server.post("/api/login", userController.loginUser);
-server.get("/api/:userId", userController.getUserDetails);
+server.get("/api/users/user-details", userController.getUserDetails);
 
 //connect with database and start the server
 mongoose

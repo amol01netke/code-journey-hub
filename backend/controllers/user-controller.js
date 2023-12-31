@@ -1,3 +1,4 @@
+const process = require("process");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require(`../models/user.js`);
@@ -88,10 +89,16 @@ const registerUser = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const token = req.headers.authorization.split(" ")[1];
 
-    // Assuming User is your Mongoose model
-    const user = await User.findById(userId);
+    const decodedToken = await jwt.verify(
+      token,
+      process.env.JWT_KEY || "cjhwebsite"
+    );
+
+    const userId = decodedToken.userId;
+
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

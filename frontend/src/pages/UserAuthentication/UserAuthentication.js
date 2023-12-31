@@ -2,6 +2,9 @@ import "./UserAuthentication.css";
 import { useState } from "react";
 import React from "react";
 import cjh_logo from "../../assets/cjh_logo.png";
+import { useHistory } from "react-router-dom";
+import { Route } from "react-router-dom";
+import UserDashboard from "../../pages/UserDashboard/UserDashboard";
 
 const UserAuthentication = () => {
   const [firstName, setFirstName] = useState("");
@@ -9,6 +12,8 @@ const UserAuthentication = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [activeForm, setActiveForm] = useState("login");
+
+  const history = useHistory();
 
   const switchForm = (formType) => {
     setActiveForm(formType);
@@ -36,6 +41,8 @@ const UserAuthentication = () => {
 
       //store locally
       localStorage.setItem("token", data.token);
+
+      <Route path="/user-dashboard" exact component={UserDashboard} />;
     } catch (error) {
       console.log(error.message);
     }
@@ -63,6 +70,8 @@ const UserAuthentication = () => {
 
       //store locally
       localStorage.setItem("token", data.token);
+
+      <Route path="/user-dashboard" exact component={UserDashboard} />;
     } catch (error) {
       console.log(error.message);
     }
