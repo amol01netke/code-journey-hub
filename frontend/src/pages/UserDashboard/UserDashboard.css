@@ -1,3 +1,47 @@
 .user-dashboard {
+  background-color: var(--color1);
+  min-height: 100vh;
   text-align: center;
+}
+
+.profile-cards {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.profile-card {
+  background-color: #ccc;
+  padding: 30px 30px;
+  margin: 10px 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.profile-stats {
+  list-style-type: none;
+}
+
+.generate {
+  border: none;
+  padding: 10px 10px;
+  border-radius: 10px;
+  font-size: 1em;
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+}
+
+.generate:hover {
+  cursor: pointer;
+  background-color: #eee;
+  color: #000;
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 767px) {
+  .cards {
+    flex-direction: column;
+  }
 }

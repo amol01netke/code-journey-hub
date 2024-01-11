@@ -7,7 +7,18 @@ const userSchema = new mongoose.Schema(
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    codechef: {
+      username: { type: String },
+      globalRank: { type: String },
+      stars: { type: String },
+    },
+    leetcode: {
+      username: { type: String },
+      ranking: { type: String },
+      contributionPoints: { type: String },
+    },
   },
+
   { collection: "user-data" }
 );
 

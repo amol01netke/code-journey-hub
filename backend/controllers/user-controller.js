@@ -1,115 +1,174 @@
-const process = require("process");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require(`../models/user.js`);
 
+const createToken = (id) => {
+  return jwt.sign({ userId: id }, process.env.JWT_KEY || "cjhwebsite", {
+    expiresIn: "1h",
+  });
+};
+
+const decodeToken = (token) => {
+  const decodedToken = jwt.verify(token, process.env.JWT_KEY || "cjhwebsite", {
+    expiresIn: "1h",
+  });
+
+  return decodedToken.userId;
+};
+
 const loginUser = async (req, res) => {
   try {
-    //get all inputs
     const { email, password } = req.body;
 
-    //if empty fields
-    if (!email || !password)
-      return res.status(204).json({ message: "Please fill in all fields." });
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Please provide email and password." });
+    }
 
-    //if user not registered
     const user = await User.findOne({ email });
 
-    if (!user)
-      return res.status(201).json({ message: "Email is not registered!" });
+    if (user) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    //check password
-    const checkPassword = await bcrypt.compare(password, user.password);
-
-    if (!checkPassword)
-      return res.status(401).json({ message: "Invalid password!" });
-
-    //if valid password, create a token
-
-    //Note :
-    //here we assign userId to mongodb's user._id of user document in the payload
-    //this userId is extracted further to access specific user information
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_KEY || "cjhwebsite",
-      {
-        expiresIn: "1h",
+      if (!isPasswordValid) {
+        return res.status(401).json({ error: "Invalid password." });
       }
-    );
 
-    //return token and store locally
-    res.status(200).json({ message: "User logged in successfully!", token });
+      const token = createToken(user._id);
+
+      res.status(200).json({ message: "User logged in successfully!", token });
+    } else {
+      return res.status(404).json({ error: "Email is not registered." });
+    }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: "Internal Server Error." });
   }
 };
 
 const registerUser = async (req, res) => {
   try {
-    //get all inputs
     const { firstName, lastName, email, password } = req.body;
 
-    //if empty fields
-    if (!firstName || !lastName || !email || !password)
-      return res.status(204).json({ message: "Please fill in all fields." });
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ error: "Please fill in all fields." });
+    }
 
-    //if email already registered
     const existingUser = await User.findOne({ email });
 
-    if (existingUser)
-      return res.status(400).json({ message: "Email is already registered!" });
+    if (!existingUser) {
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    //else create new user
-    const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await User.create({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+      });
 
-    const user = await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    });
+      const token = createToken(user._id);
 
-    //Note :
-    //here we assign userId to mongodb's user._id of user document in the payload
-    //this userId is extracted further to access specific user information
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_KEY || "cjhwebsite",
-      {
-        expiresIn: "1h",
-      }
-    );
-
-    //return token and store locally
-    res.status(201).json({ message: "User registered successfully!", token });
+      res.status(201).json({ message: "User registered successfully!", token });
+    } else {
+      return res.status(400).json({ error: "Email is already registered." });
+    }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: "Internal Server Error." });
   }
 };
 
-const getUserDetails = async (req, res) => {
+const createCodechefProfile = async (req, res) => {
+  try {
+    //fetch data from codechef api
+    const { username } = req.body;
+    const response = await fetch(`https://codechef-api.vercel.app/${username}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+
+      const token = req.headers.authorization.split(" ")[1];
+      const userId = decodeToken(token);
+      const user = await User.findOne({ _id: userId });
+
+      if (user) {
+        const { globalRank, stars } = data;
+        user.codechef = { username, globalRank, stars };
+
+        await user.save();
+
+        res
+          .status(200)
+          .json({ message: "Codechef profile created successfully!", user });
+      } else {
+        res.status(404).json({ error: "User not found." });
+      }
+    } else {
+      res.status(500).json({ error: "Failed to fetch CodeChef data." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+const createLeetcodeProfile = async (req, res) => {
+  try {
+    //fetch data from leetcode api
+    const { username } = req.body;
+    const response = await fetch(
+      `https://leetcode-stats-api.herokuapp.com/${username}`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+
+      const token = req.headers.authorization.split(" ")[1];
+      const userId = decodeToken(token);
+      const user = await User.findOne({ _id: userId });
+
+      if (user) {
+        const { ranking, contributionPoints } = data;
+        user.leetcode = { username, ranking, contributionPoints };
+
+        await user.save();
+
+        res
+          .status(200)
+          .json({ message: "Leetcode profile created successfully!", user });
+      } else {
+        res.status(404).json({ error: "User not found." });
+      }
+    } else {
+      res.status(500).json({ error: "Failed to fetch Leetcode data." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+const getUserProfiles = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
 
-    const decodedToken = await jwt.verify(
-      token,
-      process.env.JWT_KEY || "cjhwebsite"
-    );
-
-    const userId = decodedToken.userId;
+    const userId = decodeToken(token);
 
     const user = await User.findOne({ _id: userId });
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      return res.status(404).json({ error: "User not found." });
     }
-
-    res.json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: "Internal Server Error." });
   }
 };
 
 exports.loginUser = loginUser;
 exports.registerUser = registerUser;
-exports.getUserDetails = getUserDetails;
+
+exports.createCodechefProfile = createCodechefProfile;
+exports.createLeetcodeProfile = createLeetcodeProfile;
+
+exports.getUserProfiles = getUserProfiles;

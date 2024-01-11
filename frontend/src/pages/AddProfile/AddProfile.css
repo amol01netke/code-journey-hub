@@ -1,0 +1,77 @@
+.add-profile {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color1);
+}
+
+.add-profile-form {
+  background-color: #ccc;
+  padding: 30px 50px;
+  margin: 0px 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.select-platform {
+  width: 100%;
+  padding: 10px 10px;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  border: none;
+  background-color: #333;
+  color: #fff;
+}
+
+.select-platform:hover {
+  cursor: pointer;
+}
+
+.select-heading {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.input-username {
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 5px;
+  width: 100%;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  background-color: #fff;
+  font-size: 1em;
+}
+
+.input-username:hover {
+  border: 1px solid black;
+}
+
+.input-userame:focus {
+  background-color: #fff;
+  border: 1px solid black;
+}
+
+.create-btn {
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: var(--color3);
+  font-size: 1.2em;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.create-btn:hover {
+  background-color: var(--color2);
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 767px) {
+}

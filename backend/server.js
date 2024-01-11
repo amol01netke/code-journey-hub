@@ -9,9 +9,20 @@ server.use(cors());
 server.use(express.json());
 
 //routes
-server.post("/api/register", userController.registerUser);
 server.post("/api/login", userController.loginUser);
-server.get("/api/users/user-details", userController.getUserDetails);
+server.post("/api/register", userController.registerUser);
+
+server.get("/api/get-user-profiles", userController.getUserProfiles);
+
+server.post(
+  "/api/create-codechef-profile",
+  userController.createCodechefProfile
+);
+
+server.post(
+  "/api/create-leetcode-profile",
+  userController.createLeetcodeProfile
+);
 
 //connect with database and start the server
 mongoose

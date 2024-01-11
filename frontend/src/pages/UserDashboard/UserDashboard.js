@@ -1,49 +1,84 @@
 import React, { useState, useEffect } from "react";
+import "./UserDashboard.css";
 
 const UserDashboard = (props) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [codechefData, setCodechefData] = useState({
+    username: "",
+    rank: "",
+    stars: "",
+  });
+
+  const [leetcodeData, setLeetCodeData] = useState({
+    username: "",
+    rank: 0,
+    points: 0,
+  });
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
+    const fetchUserProfiles = async () => {
       try {
-        if (!props.token) {
-          console.error("No token available.");
-          return;
-        }
-
         const response = await fetch(
-          "http://localhost:8000/api/users/user-details",
+          "http://localhost:8000/api/get-user-profiles",
           {
             method: "GET",
             headers: {
-              "content-Type": "application/json",
+              "content-type": "application/json",
               Authorization: `Bearer ${props.token}`,
             },
           }
         );
 
-        const data = await response.json();
-        console.log(data);
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
 
-        setFirstName(data.firstName);
-        setLastName(data.lastName);
-        setEmail(data.email);
+          setCodechefData({
+            username: data.codechef.username,
+            rank: data.codechef.globalRank,
+            stars: data.codechef.stars,
+          });
+
+          setLeetCodeData({
+            username: data.leetcode.username,
+            rank: data.leetcode.ranking,
+            points: data.leetcode.contributionPoints,
+          });
+        } else {
+          const error = await response.json();
+          console.log(error);
+        }
       } catch (error) {
-        console.error(error.message);
+        console.log(error.message);
       }
     };
 
-    fetchUserDetails();
+    fetchUserProfiles();
   }, [props.token]);
 
   return (
     <React.Fragment>
       <div className="user-dashboard">
-        {`Details :`}
-        {`Name : ${firstName} ${lastName}`}
-        {`Email : ${email}`}
+        <div className="profile-cards">
+          <div className="profile-card">
+            <h3>Codechef</h3>
+            <div className="profile-info">
+              <p>{`Username : ${codechefData.username}`}</p>
+              <p>{`Rank : ${codechefData.rank}`} </p>
+              <p>{`Stars : ${codechefData.stars}`}</p>
+            </div>
+          </div>
+          <div className="profile-card">
+            <h3>Leetcode</h3>{" "}
+            <div className="profile-info">
+              <p>{`Username : ${leetcodeData.username}`}</p>
+              <p>{`Rank : ${leetcodeData.rank}`} </p>
+              <p>{`Points  : ${leetcodeData.points}`}</p>
+            </div>
+          </div>
+        </div>
+        <div className="link-generator">
+          <button className="generate">Generate a link</button>
+        </div>
       </div>
     </React.Fragment>
   );
