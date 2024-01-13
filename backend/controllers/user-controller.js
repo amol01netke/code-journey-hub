@@ -92,8 +92,14 @@ const createCodechefProfile = async (req, res) => {
       const user = await User.findOne({ _id: userId });
 
       if (user) {
-        const { globalRank, stars } = data;
-        user.codechef = { username, globalRank, stars };
+        const { globalRank, stars, currentRating, highestRating } = data;
+        user.codechef = {
+          username,
+          globalRank,
+          stars,
+          currentRating,
+          highestRating,
+        };
 
         await user.save();
 
@@ -128,8 +134,22 @@ const createLeetcodeProfile = async (req, res) => {
       const user = await User.findOne({ _id: userId });
 
       if (user) {
-        const { ranking, contributionPoints } = data;
-        user.leetcode = { username, ranking, contributionPoints };
+        const {
+          ranking,
+          contributionPoints,
+          acceptanceRate,
+          totalSolved,
+          totalQuestions,
+        } = data;
+
+        user.leetcode = {
+          username,
+          ranking,
+          contributionPoints,
+          acceptanceRate,
+          totalSolved,
+          totalQuestions,
+        };
 
         await user.save();
 
@@ -147,7 +167,7 @@ const createLeetcodeProfile = async (req, res) => {
   }
 };
 
-const getUserProfiles = async (req, res) => {
+const getUserProfile = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
 
@@ -165,10 +185,36 @@ const getUserProfiles = async (req, res) => {
   }
 };
 
+const updateUserProfile = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+
+    const userId = decodeToken(token);
+
+    const user = await User.findOne({ _id: userId });
+
+    if (user) {
+      const formData = req.body;
+
+      user.firstName = formData.firstName;
+      user.lastName = formData.lastName;
+
+      await user.save();
+
+      res.json({ message: "Profile updated successfully!", user });
+    } else {
+      return res.status(404).json({ error: "User not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
 exports.loginUser = loginUser;
 exports.registerUser = registerUser;
 
 exports.createCodechefProfile = createCodechefProfile;
 exports.createLeetcodeProfile = createLeetcodeProfile;
 
-exports.getUserProfiles = getUserProfiles;
+exports.getUserProfile = getUserProfile;
+exports.updateUserProfile = updateUserProfile;

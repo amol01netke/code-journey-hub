@@ -58,7 +58,7 @@ const AddProfile = (props) => {
           className="input-username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder={`Enter username for ${selectedOption}`}
+          placeholder={`Enter username`}
         />
         <input type="submit" className="create-btn" value="Create Profile" />
       </form>

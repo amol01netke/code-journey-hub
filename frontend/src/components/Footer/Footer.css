@@ -1,8 +1,21 @@
 .footer {
   background-color: #000;
   color: #fff;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 10px;
+  min-height: 10vh;
+}
+
+.footer-link {
+  text-decoration: none;
+  color: #ccc;
+}
+
+.footer-link:hover {
+  color: var(--color3);
 }
 
 .footer p {

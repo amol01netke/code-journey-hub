@@ -12,17 +12,17 @@ server.use(express.json());
 server.post("/api/login", userController.loginUser);
 server.post("/api/register", userController.registerUser);
 
-server.get("/api/get-user-profiles", userController.getUserProfiles);
-
 server.post(
   "/api/create-codechef-profile",
   userController.createCodechefProfile
 );
-
 server.post(
   "/api/create-leetcode-profile",
   userController.createLeetcodeProfile
 );
+
+server.get("/api/get-user-profile", userController.getUserProfile);
+server.put("/api/update-user-profile", userController.updateUserProfile);
 
 //connect with database and start the server
 mongoose

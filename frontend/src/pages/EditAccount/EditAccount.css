@@ -1,0 +1,105 @@
+.edit-account {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-account-form {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px 20px;
+  border-radius: 10px 10px;
+  width: 50vw;
+}
+
+.edit-account-form h2 {
+  text-align: center;
+  margin: 10px 10px;
+}
+
+.input-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.form-label {
+  width: 100%;
+  padding: 0px 20px;
+}
+
+.edit-form-input {
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 5px;
+  width: 100%;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  background-color: #ccc;
+  font-size: 1em;
+  color: #333;
+}
+
+.edit-form-input:hover {
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.edit-form-input:focus {
+  background-color: #fff;
+  border: 1px solid #000;
+}
+
+.edit-form-input:enabled {
+  font-weight: bold;
+  border: 1px solid #000;
+}
+
+.edit-btn {
+  border: none;
+  background: none;
+  margin: 10px 10px;
+  font-size: 1.1em;
+}
+
+.edit-btn:hover {
+  cursor: pointer;
+  color: var(--color3);
+}
+
+.edit-form-submit {
+  background-color: var(--color2);
+  color: #fff;
+  border: none;
+  padding: 10px 10px;
+  width: fit-content;
+  text-align: center;
+  border-radius: 10px;
+  font-weight: bold;
+  margin: 10px 10px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.edit-form-submit:hover {
+  cursor: pointer;
+  box-shadow: 2px 2px 10px 2px #ccc;
+  background-color: var(--color3);
+}
+
+@media only screen and (max-width: 767px) {
+  .edit-account-form {
+    width: 90vw;
+  }
+
+  .input-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+  }
+}

@@ -8,7 +8,7 @@ import UserAuthentication from "./pages/UserAuthentication/UserAuthentication";
 import UserDashboard from "./pages/UserDashboard/UserDashboard";
 import { useState, useEffect } from "react";
 import AddProfile from "./pages/AddProfile/AddProfile";
-import EditProfile from "./pages/EditProfile/EditProfile";
+import EditAccount from "./pages/EditAccount/EditAccount";
 import AboutUs from "./pages/AboutUs/AboutUs";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
@@ -32,7 +32,7 @@ const App = () => {
     routes = (
       <Switch>
         <Route
-          path="/user-dashboard"
+          path="/dashboard"
           exact
           render={() => (
             <UserDashboard token={storedToken} setIsLoggedIn={setIsLoggedIn} />
@@ -43,21 +43,25 @@ const App = () => {
           exact
           render={() => <AddProfile token={storedToken} />}
         />
-        <Route path="/edit-profile" exact render={() => <EditProfile />} />
+        <Route
+          path="/edit-account"
+          exact
+          render={() => <EditAccount token={storedToken} />}
+        />
         <Route path="/about-us" exact render={() => <AboutUs />} />
-        <Redirect to="/user-dashboard" />
+        <Redirect to="/dashboard" />
       </Switch>
     );
   } else {
     routes = (
       <Switch>
         <Route
-          path="/user-authentication"
+          path="/authentication"
           exact
           render={() => <UserAuthentication setIsLoggedIn={setIsLoggedIn} />}
         />
-
-        <Redirect to="/user-authentication" />
+        <Route path="/about-us" exact render={() => <AboutUs />} />
+        <Redirect to="/authentication" />
       </Switch>
     );
   }

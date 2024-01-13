@@ -2,6 +2,7 @@ import "./UserAuthentication.css";
 import { useState } from "react";
 import React from "react";
 import cjh_logo from "../../assets/cjh_logo.png";
+import { Link } from "react-router-dom";
 
 const UserAuthentication = (props) => {
   const [firstName, setFirstName] = useState("");
@@ -173,6 +174,10 @@ const UserAuthentication = (props) => {
             ? `New User ? Register`
             : `Already regsitered ? Login`}
         </button>
+
+        <Link to="/about-us" className="link-about-us">
+          <p>About Us</p>
+        </Link>
       </div>
     </React.Fragment>
   );

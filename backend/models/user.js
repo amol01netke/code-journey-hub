@@ -11,11 +11,16 @@ const userSchema = new mongoose.Schema(
       username: { type: String },
       globalRank: { type: String },
       stars: { type: String },
+      currentRating: { type: String },
+      highestRating: { type: String },
     },
     leetcode: {
       username: { type: String },
       ranking: { type: String },
       contributionPoints: { type: String },
+      acceptanceRate: { type: String },
+      totalSolved: { type: String },
+      totalQuestions: { type: String },
     },
   },
 

@@ -1,16 +1,15 @@
 .add-profile {
-  min-height: 100vh;
+  min-height: 80vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--color1);
 }
 
 .add-profile-form {
-  background-color: #ccc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
   padding: 30px 50px;
-  margin: 0px 10px;
+  margin: 40px 10px;
   border-radius: 10px;
   text-align: center;
 }
@@ -44,33 +43,34 @@
   border-radius: 5px;
   outline: none;
   border: none;
-  background-color: #fff;
+  background-color: #ccc;
   font-size: 1em;
 }
 
 .input-username:hover {
-  border: 1px solid black;
+  border: 1px solid gray;
 }
 
-.input-userame:focus {
-  background-color: #fff;
-  border: 1px solid black;
+.input-username:focus {
+  border: 1px solid var(--color2);
 }
 
 .create-btn {
   border: none;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
-  background-color: var(--color3);
-  font-size: 1.2em;
-  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 1em;
+  background-color: var(--color2);
+  color: #fff;
   font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-top: 20px;
 }
 
 .create-btn:hover {
-  background-color: var(--color2);
-  cursor: pointer;
+  background-color: var(--color3);
+  box-shadow: 2px 2px 10px 2px #ccc;
 }
 
 @media only screen and (max-width: 767px) {
