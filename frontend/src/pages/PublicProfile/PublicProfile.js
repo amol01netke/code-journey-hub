@@ -1,16 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./UserDashboard.css";
+import "./PublicProfile.css";
+import React, { useState, useEffect } from "react";
 import codechef_logo from "../../assets/codechef_logo.jpg";
 import leetcode_logo from "../../assets/leetcode_logo.png";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopy } from "@fortawesome/free-solid-svg-icons";
 
-const UserDashboard = (props) => {
-  const linkRef = useRef(null);
-
+const PublicProfile = (props) => {
   const [name, setName] = useState("");
-  const [profileURL, setProfileURL] = useState("");
 
   const [codechefData, setCodechefData] = useState({
     username: "",
@@ -48,7 +42,6 @@ const UserDashboard = (props) => {
           console.log(data);
 
           setName(`${data.firstName} ${data.lastName}`);
-          setProfileURL(`${data.profileURL}`);
 
           setCodechefData({
             username: data.codechef.username,
@@ -78,20 +71,10 @@ const UserDashboard = (props) => {
     fetchUserProfile();
   }, [props.token]);
 
-  const copyURL = () => {
-    if (linkRef.current) {
-      linkRef.current.value = profileURL;
-      linkRef.current.select();
-      document.execCommand("copy");
-
-      console.log(`Link copied successfully! ${profileURL}`);
-    }
-  };
-
   return (
     <React.Fragment>
-      <div className="user-dashboard">
-        <h1>Welcome, {`${name}`}</h1>
+      <div className="public-profile">
+        <h1>Welcome to {`${name}'s Profile`}</h1>
         <div className="profile-cards">
           <div className="profile-card codechef-card">
             <div className="profile-card-header">
@@ -113,17 +96,11 @@ const UserDashboard = (props) => {
                     >
                       Visit Profile
                     </a>
-                    <Link to="/add-profile">
-                      <p>Change Username</p>
-                    </Link>
                   </div>
                 </div>
               ) : (
                 <div className="no-profile">
                   <p>Profile not added</p>
-                  <Link to="/add-profile">
-                    <button className="add-btn">Add Profile</button>
-                  </Link>
                 </div>
               )}
             </div>
@@ -152,37 +129,19 @@ const UserDashboard = (props) => {
                     >
                       Visit Profile
                     </a>
-                    <Link to="/add-profile">
-                      <p>Change Username</p>
-                    </Link>
                   </div>
                 </div>
               ) : (
                 <div className="no-profile">
                   <p>Profile not added</p>
-                  <Link to="/add-profile">
-                    <button className="add-btn">Add Profile</button>
-                  </Link>
                 </div>
               )}
             </div>
           </div>
-        </div>
-        <div className="link-generator">
-          <button className="share-url" onClick={copyURL}>
-            <FontAwesomeIcon icon={faCopy} />
-            <span> </span>
-            Copy Profile URL
-          </button>
-          <input
-            ref={linkRef}
-            readOnly
-            style={{ position: "absolute", left: "-9999px" }}
-          />
         </div>
       </div>
     </React.Fragment>
   );
 };
 
-export default UserDashboard;
+export default PublicProfile;

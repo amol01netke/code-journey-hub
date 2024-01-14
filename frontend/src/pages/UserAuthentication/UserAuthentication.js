@@ -152,7 +152,7 @@ const UserAuthentication = (props) => {
               />
               <input
                 type="password"
-                placeholder="Password"
+                placeholder="Create a Password"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);

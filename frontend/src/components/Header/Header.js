@@ -37,7 +37,7 @@ const Header = (props) => {
     </ul>
   );
 
-  return (
+  return props.isLoggedIn ? (
     <header className="header">
       {displayProfileMenu()}
       <div className="header-logo">
@@ -55,6 +55,15 @@ const Header = (props) => {
           <FontAwesomeIcon icon={faUser} />
         </button>
       </ul>
+    </header>
+  ) : (
+    <header className="header">
+      <div className="header-logo">
+        <Link to="/user-dashboard">
+          <img src={cjh_logo} className="header-icon" alt="header-logo" />
+        </Link>
+        <h1>CodeJourneyHub</h1>
+      </div>
     </header>
   );
 };

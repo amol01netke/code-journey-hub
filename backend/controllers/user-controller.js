@@ -2,6 +2,23 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require(`../models/user.js`);
 
+const isNameValid = (firstName, lastName) => {
+  const nameRegex = /^[^\s][a-zA-Z\s]+[^\s]$/;
+  return nameRegex.test(firstName, lastName);
+};
+
+const isEmailValid = (email) => {
+  const emailRegex = /^[^\s@]+@gmail\.com$/;
+  return emailRegex.test(email) && email.length <= 30;
+};
+
+const isPasswordValid = (password) => {
+  const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+{}|;:'",.<>?\/`~\\\[\]\-=]+$/;
+  return (
+    passwordRegex.test(password) && password.length >= 6 && password.length <= 8
+  );
+};
+
 const createToken = (id) => {
   return jwt.sign({ userId: id }, process.env.JWT_KEY || "cjhwebsite", {
     expiresIn: "1h",
@@ -16,14 +33,24 @@ const decodeToken = (token) => {
   return decodedToken.userId;
 };
 
+const generateProfileURL = (firstName, lastName) => {
+  const baseURL = `http://localhost:3000`;
+
+  return `${baseURL}/public-profile/${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
+};
+
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (!isEmailValid(email)) {
+      return res.status(400).json({ error: "Please provide a valid email." });
+    }
+
+    if (!isPasswordValid(password)) {
       return res
         .status(400)
-        .json({ error: "Please provide email and password." });
+        .json({ error: "Please provide a valid password." });
     }
 
     const user = await User.findOne({ email });
@@ -50,8 +77,18 @@ const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    if (!firstName || !lastName || !email || !password) {
-      return res.status(400).json({ error: "Please fill in all fields." });
+    if (!isNameValid(firstName, lastName)) {
+      return res.status(400).json({ error: "Please provide a valid name." });
+    }
+
+    if (!isEmailValid(email)) {
+      return res.status(400).json({ error: "Please provide a valid email." });
+    }
+
+    if (!isPasswordValid(password)) {
+      return res
+        .status(400)
+        .json({ error: "Please provide a valid password." });
     }
 
     const existingUser = await User.findOne({ email });
@@ -59,11 +96,14 @@ const registerUser = async (req, res) => {
     if (!existingUser) {
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      const shareableURL = generateProfileURL(firstName, lastName);
+
       const user = await User.create({
         firstName,
         lastName,
         email,
         password: hashedPassword,
+        profileURL: shareableURL,
       });
 
       const token = createToken(user._id);
@@ -195,6 +235,10 @@ const updateUserProfile = async (req, res) => {
 
     if (user) {
       const formData = req.body;
+
+      if (!isNameValid(firstName, lastName)) {
+        return res.status(400).json({ error: "Please provide a valid name." });
+      }
 
       user.firstName = formData.firstName;
       user.lastName = formData.lastName;

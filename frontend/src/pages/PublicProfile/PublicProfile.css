@@ -1,0 +1,14 @@
+.public-profile {
+  min-height: 80vh;
+}
+
+.public-profile h1 {
+  text-align: center;
+}
+
+@media only screen and (max-width: 767px) {
+  .public-profile h1 {
+    font-size: 1.8em;
+    margin: 10px 10px;
+  }
+}

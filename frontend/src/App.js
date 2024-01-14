@@ -13,6 +13,7 @@ import AboutUs from "./pages/AboutUs/AboutUs";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import React from "react";
+import PublicProfile from "./pages/PublicProfile/PublicProfile";
 
 const App = () => {
   const [storedToken, setStoredToken] = useState("");
@@ -32,7 +33,7 @@ const App = () => {
     routes = (
       <Switch>
         <Route
-          path="/dashboard"
+          path="/user-dashboard"
           exact
           render={() => (
             <UserDashboard token={storedToken} setIsLoggedIn={setIsLoggedIn} />
@@ -49,19 +50,29 @@ const App = () => {
           render={() => <EditAccount token={storedToken} />}
         />
         <Route path="/about-us" exact render={() => <AboutUs />} />
-        <Redirect to="/dashboard" />
+        <Route
+          path="/public-profile/:username"
+          exact
+          render={() => <PublicProfile token={storedToken} />}
+        />
+        <Redirect to="/user-dashboard" />
       </Switch>
     );
   } else {
     routes = (
       <Switch>
         <Route
-          path="/authentication"
+          path="/user-authentication"
           exact
           render={() => <UserAuthentication setIsLoggedIn={setIsLoggedIn} />}
         />
         <Route path="/about-us" exact render={() => <AboutUs />} />
-        <Redirect to="/authentication" />
+        <Route
+          path="/public-profile/:username"
+          exact
+          render={() => <PublicProfile token={storedToken} />}
+        />
+        <Redirect to="/user-authentication" />
       </Switch>
     );
   }
@@ -69,14 +80,17 @@ const App = () => {
   return isLoggedIn ? (
     <Router>
       <div className="App">
-        <Header setIsLoggedIn={setIsLoggedIn} />
+        <Header setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
         {routes}
         <Footer />
       </div>
     </Router>
   ) : (
     <Router>
-      <div className="App">{routes}</div>
+      <div className="App">
+        <Header />
+        {routes}
+      </div>
     </Router>
   );
 };

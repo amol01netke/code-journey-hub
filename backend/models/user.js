@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
       totalSolved: { type: String },
       totalQuestions: { type: String },
     },
+    profileURL: { type: String },
   },
 
   { collection: "user-data" }
