@@ -7,11 +7,6 @@ const isNameValid = (firstName, lastName) => {
   return nameRegex.test(firstName, lastName);
 };
 
-const isUsernameValid = (username) => {
-  const usernameRegex = /^[a-zA-Z0-9]+$/;
-  return usernameRegex.test(username);
-};
-
 const isEmailValid = (email) => {
   const emailRegex = /^[^\s@]+@gmail\.com$/;
   return emailRegex.test(email) && email.length <= 30;
@@ -129,12 +124,6 @@ const createCodechefProfile = async (req, res) => {
     //fetch data from codechef api
     const { username } = req.body;
 
-    if (!isUsernameValid(username)) {
-      return res
-        .status(400)
-        .json({ error: "Username should not contain any whitespaces." });
-    }
-
     const response = await fetch(`https://codechef-api.vercel.app/${username}`);
 
     if (response.ok) {
@@ -205,12 +194,6 @@ const createLeetcodeProfile = async (req, res) => {
   try {
     //fetch data from leetcode api
     const { username } = req.body;
-
-    if (!isUsernameValid(username)) {
-      return res
-        .status(400)
-        .json({ error: "Username should not contain any whitespaces." });
-    }
 
     const response = await fetch(
       `https://leetcode-stats-api.herokuapp.com/${username}`
