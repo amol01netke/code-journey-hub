@@ -113,6 +113,16 @@
   text-align: center;
 }
 
+.delete-profile {
+  background: none;
+  border: none;
+}
+
+.delete-profile:hover {
+  color: red;
+  cursor: pointer;
+}
+
 .share-url {
   padding: 10px 10px;
   font-size: 1em;

@@ -4,7 +4,7 @@ import codechef_logo from "../../assets/codechef_logo.jpg";
 import leetcode_logo from "../../assets/leetcode_logo.png";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { faCopy, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const UserDashboard = (props) => {
   const linkRef = useRef(null);
@@ -181,7 +181,7 @@ const UserDashboard = (props) => {
                       className="delete-profile"
                       onClick={() => deleteProfile(codechefData, "codechef")}
                     >
-                      delete
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
                 </div>
@@ -226,7 +226,7 @@ const UserDashboard = (props) => {
                       className="delete-profile"
                       onClick={() => deleteProfile(leetcodeData, "leetcode")}
                     >
-                      delete
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
                 </div>
