@@ -86,6 +86,52 @@ const UserDashboard = (props) => {
     fetchUserProfile();
   }, [userToken]);
 
+  const deleteProfile = async (data, platform) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/delete-${platform}-profile`,
+        {
+          method: "DELETE",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${userToken}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+
+        if (platform === "codechef")
+          setCodechefData({
+            username: "",
+            rank: "",
+            stars: "",
+            currentRating: "",
+            highestRating: "",
+          });
+        else
+          setLeetcodeData({
+            username: "",
+            rank: "",
+            points: "",
+            acceptanceRate: "",
+            totalSolved: "",
+            totalQuestions: "",
+          });
+
+        alert(data.message);
+      } else {
+        const error = await response.json();
+        alert(error.error);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const copyURL = () => {
     if (linkRef.current) {
       linkRef.current.value = profileURL;
@@ -131,6 +177,12 @@ const UserDashboard = (props) => {
                     <Link to="/add-profile">
                       <p>Change Username</p>
                     </Link>
+                    <button
+                      className="delete-profile"
+                      onClick={() => deleteProfile(codechefData, "codechef")}
+                    >
+                      delete
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -170,6 +222,12 @@ const UserDashboard = (props) => {
                     <Link to="/add-profile">
                       <p>Change Username</p>
                     </Link>
+                    <button
+                      className="delete-profile"
+                      onClick={() => deleteProfile(leetcodeData, "leetcode")}
+                    >
+                      delete
+                    </button>
                   </div>
                 </div>
               ) : (

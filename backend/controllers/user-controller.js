@@ -123,6 +123,13 @@ const createCodechefProfile = async (req, res) => {
   try {
     //fetch data from codechef api
     const { username } = req.body;
+
+    if (!isNameValid(username)) {
+      return res
+        .status(400)
+        .json({ error: "Username should not contain any whitespaces." });
+    }
+
     const response = await fetch(`https://codechef-api.vercel.app/${username}`);
 
     if (response.ok) {
@@ -163,10 +170,37 @@ const createCodechefProfile = async (req, res) => {
   }
 };
 
+const deleteCodechefProfile = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = decodeToken(token);
+    const user = await User.findOne({ _id: userId });
+
+    if (user) {
+      user.codechef = {};
+
+      await user.save();
+
+      res.status(200).json({ message: "Profile deleted successfully!", user });
+    } else {
+      res.status(404).json({ error: "User not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
 const createLeetcodeProfile = async (req, res) => {
   try {
     //fetch data from leetcode api
     const { username } = req.body;
+
+    if (!isNameValid(username)) {
+      return res
+        .status(400)
+        .json({ error: "Username should not contain any whitespaces." });
+    }
+
     const response = await fetch(
       `https://leetcode-stats-api.herokuapp.com/${username}`
     );
@@ -211,6 +245,26 @@ const createLeetcodeProfile = async (req, res) => {
       }
     } else {
       res.status(500).json({ error: "Failed to fetch Leetcode data." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+const deleteLeetcodeProfile = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = decodeToken(token);
+    const user = await User.findOne({ _id: userId });
+
+    if (user) {
+      user.leetcode = {};
+
+      await user.save();
+
+      res.status(200).json({ message: "Profile deleted successfully!", user });
+    } else {
+      res.status(404).json({ error: "User not found." });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error." });
@@ -270,7 +324,10 @@ exports.loginUser = loginUser;
 exports.registerUser = registerUser;
 
 exports.createCodechefProfile = createCodechefProfile;
+exports.deleteCodechefProfile = deleteCodechefProfile;
+
 exports.createLeetcodeProfile = createLeetcodeProfile;
+exports.deleteLeetcodeProfile = deleteLeetcodeProfile;
 
 exports.getUserProfile = getUserProfile;
 exports.updateUserProfile = updateUserProfile;

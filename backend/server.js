@@ -16,9 +16,18 @@ server.post(
   "/api/create-codechef-profile",
   userController.createCodechefProfile
 );
+server.delete(
+  "/api/delete-codechef-profile",
+  userController.deleteCodechefProfile
+);
+
 server.post(
   "/api/create-leetcode-profile",
   userController.createLeetcodeProfile
+);
+server.delete(
+  "/api/delete-leetcode-profile",
+  userController.deleteLeetcodeProfile
 );
 
 server.get("/api/get-user-profile", userController.getUserProfile);
