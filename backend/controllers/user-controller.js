@@ -7,6 +7,11 @@ const isNameValid = (firstName, lastName) => {
   return nameRegex.test(firstName, lastName);
 };
 
+const isUsernameValid = (username) => {
+  const usernameRegex = /^[a-zA-Z0-9]+$/;
+  return usernameRegex.test(username);
+};
+
 const isEmailValid = (email) => {
   const emailRegex = /^[^\s@]+@gmail\.com$/;
   return emailRegex.test(email) && email.length <= 30;
@@ -34,7 +39,7 @@ const decodeToken = (token) => {
 };
 
 const generateProfileURL = (firstName, lastName) => {
-  const baseURL = `https://codejourneyhub.netlify.app`;
+  const baseURL = `https://code-journey-hub.netlify.app/`;
 
   return `${baseURL}/profile/${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
 };
@@ -124,7 +129,7 @@ const createCodechefProfile = async (req, res) => {
     //fetch data from codechef api
     const { username } = req.body;
 
-    if (!isNameValid(username)) {
+    if (!isUsernameValid(username)) {
       return res
         .status(400)
         .json({ error: "Username should not contain any whitespaces." });
@@ -177,7 +182,13 @@ const deleteCodechefProfile = async (req, res) => {
     const user = await User.findOne({ _id: userId });
 
     if (user) {
-      user.codechef = {};
+      user.codechef = {
+        username: "",
+        globalRank: "",
+        stars: "",
+        currentRating: "",
+        highestRating: "",
+      };
 
       await user.save();
 
@@ -195,7 +206,7 @@ const createLeetcodeProfile = async (req, res) => {
     //fetch data from leetcode api
     const { username } = req.body;
 
-    if (!isNameValid(username)) {
+    if (!isUsernameValid(username)) {
       return res
         .status(400)
         .json({ error: "Username should not contain any whitespaces." });
@@ -258,7 +269,14 @@ const deleteLeetcodeProfile = async (req, res) => {
     const user = await User.findOne({ _id: userId });
 
     if (user) {
-      user.leetcode = {};
+      user.leetcode = {
+        username: "",
+        ranking: "",
+        contributionPoints: "",
+        acceptanceRate: "",
+        totalSolved: "",
+        totalQuestions: "",
+      };
 
       await user.save();
 

@@ -24,7 +24,7 @@ const UserAuthentication = (props) => {
 
     try {
       const response = await fetch(
-        "https://codejourneyhub.onrender.com/api/login",
+        "https://code-journey-hub.onrender.com/api/login",
         {
           method: "POST",
           headers: { "content-type": "application/json" },
@@ -58,7 +58,7 @@ const UserAuthentication = (props) => {
 
     try {
       const response = await fetch(
-        "https://codejourneyhub.onrender.com/api/register",
+        "https://code-journey-hub.onrender.com/api/register",
         {
           method: "POST",
           headers: {

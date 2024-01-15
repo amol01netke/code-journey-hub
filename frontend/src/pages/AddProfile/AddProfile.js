@@ -16,7 +16,7 @@ const AddProfile = (props) => {
 
     try {
       const response = await fetch(
-        `https://codejourneyhub.onrender.com/api/create-${selectedOption}-profile`,
+        `https://code-journey-hub.onrender.com/api/create-${selectedOption}-profile`,
         {
           method: "POST",
           headers: {

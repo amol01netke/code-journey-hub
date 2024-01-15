@@ -16,7 +16,7 @@ const EditAccount = (props) => {
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
-          "https://codejourneyhub.onrender.com/api/get-user-profile",
+          "https://code-journey-hub.onrender.com/api/get-user-profile",
           {
             method: "GET",
             headers: {
@@ -63,7 +63,7 @@ const EditAccount = (props) => {
 
     try {
       const response = await fetch(
-        `https://codejourneyhub.onrender.com/api/update-user-profile`,
+        `https://code-journey-hub.onrender.com/api/update-user-profile`,
         {
           method: "PUT",
           headers: {
