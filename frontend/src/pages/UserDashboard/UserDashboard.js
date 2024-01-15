@@ -8,6 +8,9 @@ import { faCopy } from "@fortawesome/free-solid-svg-icons";
 
 const UserDashboard = (props) => {
   const linkRef = useRef(null);
+  const userToken = props.token;
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [name, setName] = useState("");
   const [profileURL, setProfileURL] = useState("");
@@ -19,7 +22,6 @@ const UserDashboard = (props) => {
     currentRating: "",
     highestRating: "",
   });
-
   const [leetcodeData, setLeetcodeData] = useState({
     username: "",
     rank: "",
@@ -38,7 +40,7 @@ const UserDashboard = (props) => {
             method: "GET",
             headers: {
               "content-type": "application/json",
-              Authorization: `Bearer ${props.token}`,
+              Authorization: `Bearer ${userToken}`,
             },
           }
         );
@@ -50,22 +52,28 @@ const UserDashboard = (props) => {
           setName(`${data.firstName} ${data.lastName}`);
           setProfileURL(`${data.profileURL}`);
 
-          setCodechefData({
-            username: data.codechef.username,
-            rank: data.codechef.globalRank,
-            stars: data.codechef.stars,
-            currentRating: data.codechef.currentRating,
-            highestRating: data.codechef.highestRating,
-          });
+          if (data.codechef) {
+            setCodechefData({
+              username: data.codechef.username,
+              rank: data.codechef.globalRank,
+              stars: data.codechef.stars,
+              currentRating: data.codechef.currentRating,
+              highestRating: data.codechef.highestRating,
+            });
+          }
 
-          setLeetcodeData({
-            username: data.leetcode.username,
-            rank: data.leetcode.ranking,
-            points: data.leetcode.contributionPoints,
-            acceptanceRate: data.leetcode.acceptanceRate,
-            totalSolved: data.leetcode.totalSolved,
-            totalQuestions: data.leetcode.totalQuestions,
-          });
+          if (data.leetcode) {
+            setLeetcodeData({
+              username: data.leetcode.username,
+              rank: data.leetcode.ranking,
+              points: data.leetcode.contributionPoints,
+              acceptanceRate: data.leetcode.acceptanceRate,
+              totalSolved: data.leetcode.totalSolved,
+              totalQuestions: data.leetcode.totalQuestions,
+            });
+          }
+
+          setIsLoading(false);
         } else {
           const error = await response.json();
           console.log(error);
@@ -76,7 +84,7 @@ const UserDashboard = (props) => {
     };
 
     fetchUserProfile();
-  }, [props.token]);
+  }, [userToken]);
 
   const copyURL = () => {
     if (linkRef.current) {
@@ -84,11 +92,18 @@ const UserDashboard = (props) => {
       linkRef.current.select();
       document.execCommand("copy");
 
-      console.log(`Link copied successfully! ${profileURL}`);
+      console.log(`Link copied to clipboard. ${profileURL}`);
+      alert(`Link copied to clipboard : ${profileURL}`);
     }
   };
 
-  return (
+  return isLoading ? (
+    <React.Fragment>
+      <div className="user-dashboard">
+        <p className="loading-msg">Loading...</p>
+      </div>
+    </React.Fragment>
+  ) : (
     <React.Fragment>
       <div className="user-dashboard">
         <h1>Welcome, {`${name}`}</h1>

@@ -4,6 +4,9 @@ import codechef_logo from "../../assets/codechef_logo.jpg";
 import leetcode_logo from "../../assets/leetcode_logo.png";
 
 const PublicProfile = (props) => {
+  const userToken = props.token;
+
+  const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState("");
 
   const [codechefData, setCodechefData] = useState({
@@ -32,7 +35,7 @@ const PublicProfile = (props) => {
             method: "GET",
             headers: {
               "content-type": "application/json",
-              Authorization: `Bearer ${props.token}`,
+              Authorization: `Bearer ${userToken}`,
             },
           }
         );
@@ -43,22 +46,28 @@ const PublicProfile = (props) => {
 
           setName(`${data.firstName} ${data.lastName}`);
 
-          setCodechefData({
-            username: data.codechef.username,
-            rank: data.codechef.globalRank,
-            stars: data.codechef.stars,
-            currentRating: data.codechef.currentRating,
-            highestRating: data.codechef.highestRating,
-          });
+          if (data.codechef) {
+            setCodechefData({
+              username: data.codechef.username,
+              rank: data.codechef.globalRank,
+              stars: data.codechef.stars,
+              currentRating: data.codechef.currentRating,
+              highestRating: data.codechef.highestRating,
+            });
+          }
 
-          setLeetcodeData({
-            username: data.leetcode.username,
-            rank: data.leetcode.ranking,
-            points: data.leetcode.contributionPoints,
-            acceptanceRate: data.leetcode.acceptanceRate,
-            totalSolved: data.leetcode.totalSolved,
-            totalQuestions: data.leetcode.totalQuestions,
-          });
+          if (data.leetcode) {
+            setLeetcodeData({
+              username: data.leetcode.username,
+              rank: data.leetcode.ranking,
+              points: data.leetcode.contributionPoints,
+              acceptanceRate: data.leetcode.acceptanceRate,
+              totalSolved: data.leetcode.totalSolved,
+              totalQuestions: data.leetcode.totalQuestions,
+            });
+          }
+
+          setIsLoading(false);
         } else {
           const error = await response.json();
           console.log(error);
@@ -69,9 +78,15 @@ const PublicProfile = (props) => {
     };
 
     fetchUserProfile();
-  }, [props.token]);
+  }, [userToken]);
 
-  return (
+  return isLoading ? (
+    <React.Fragment>
+      <div className="user-dashboard">
+        <p className="loading-msg">Loading...</p>
+      </div>
+    </React.Fragment>
+  ) : (
     <React.Fragment>
       <div className="public-profile">
         <h1>Welcome to {`${name}'s Profile`}</h1>

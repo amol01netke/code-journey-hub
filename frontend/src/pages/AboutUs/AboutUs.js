@@ -1,5 +1,5 @@
 import "./AboutUs.css";
-import cjh_logo from "../../assets/cjh_logo.png";
+import cjh_logo from "../../assets/cjh_logo_black.svg";
 import { Link } from "react-router-dom";
 
 const AboutUs = () => {

@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 const EditAccount = (props) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const userToken = props.token;
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -18,19 +21,20 @@ const EditAccount = (props) => {
             method: "GET",
             headers: {
               "content-type": "application/json",
-              Authorization: `Bearer ${props.token}`,
+              Authorization: `Bearer ${userToken}`,
             },
           }
         );
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
 
           setFormData({
             firstName: data.firstName,
             lastName: data.lastName,
           });
+
+          setIsLoading(false);
         } else {
           const error = await response.json();
           console.log(error);
@@ -41,7 +45,7 @@ const EditAccount = (props) => {
     };
 
     fetchUserProfile();
-  }, [props.token]);
+  }, [userToken]);
 
   const enableInput = (e, id) => {
     e.preventDefault();
@@ -49,6 +53,7 @@ const EditAccount = (props) => {
     const input = document.querySelector(`[data-input="${id}"]`);
 
     if (input) {
+      input.value = "";
       input.disabled = !input.disabled;
     }
   };
@@ -63,7 +68,7 @@ const EditAccount = (props) => {
           method: "PUT",
           headers: {
             "content-type": "application/json",
-            Authorization: `Bearer ${props.token}`,
+            Authorization: `Bearer ${userToken}`,
           },
           body: JSON.stringify(formData),
         }
@@ -71,19 +76,25 @@ const EditAccount = (props) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        alert(data.message);
       } else {
         const error = await response.json();
-        console.log(error);
+        alert(error.error);
       }
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  return (
+  return isLoading ? (
+    <React.Fragment>
+      <div className="user-dashboard">
+        <p className="loading-msg">Loading...</p>
+      </div>
+    </React.Fragment>
+  ) : (
     <div className="edit-account">
-      <form className="edit-account-form" onSubmit={(e) => updateAccount(e)}>
+      <form className="edit-account-form" onSubmit={updateAccount}>
         <h2>Edit Account</h2>
         <div className="input-card">
           <label className="form-label">First Name </label>

@@ -51,7 +51,7 @@ const App = () => {
         />
         <Route path="/about-us" exact render={() => <AboutUs />} />
         <Route
-          path="/public-profile/:username"
+          path="/profile/:username"
           exact
           render={() => <PublicProfile token={storedToken} />}
         />
@@ -68,7 +68,7 @@ const App = () => {
         />
         <Route path="/about-us" exact render={() => <AboutUs />} />
         <Route
-          path="/public-profile/:username"
+          path="/profile/:username"
           exact
           render={() => <PublicProfile token={storedToken} />}
         />

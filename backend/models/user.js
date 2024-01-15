@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    profileURL: { type: String, required: true },
     codechef: {
       username: { type: String },
       globalRank: { type: String },
@@ -22,7 +23,6 @@ const userSchema = new mongoose.Schema(
       totalSolved: { type: String },
       totalQuestions: { type: String },
     },
-    profileURL: { type: String },
   },
 
   { collection: "user-data" }

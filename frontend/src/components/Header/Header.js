@@ -1,5 +1,5 @@
 import "./Header.css";
-import cjh_logo from "../../assets/cjh_logo.png";
+import cjh_logo from "../../assets/cjh_logo.svg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,7 +9,7 @@ const Header = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuToggle = () => {
-    // console.log("Profile icon clicked!");
+    console.log("Profile icon clicked!");
     setIsMenuOpen(!isMenuOpen);
   };
 

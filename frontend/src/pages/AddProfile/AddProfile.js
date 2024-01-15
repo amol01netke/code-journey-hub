@@ -10,6 +10,7 @@ const AddProfile = (props) => {
 
     if (!username || selectedOption === "default") {
       console.log("Please provide a valid username and select a platform.");
+      alert("Please provide a valid username and select a platform.");
       return;
     }
 
@@ -32,9 +33,12 @@ const AddProfile = (props) => {
 
         setUsername("");
         setSelectedOption("");
+
+        alert(data.message);
       } else {
         const error = await response.json();
         console.log(error);
+        alert(error.error);
       }
     } catch (error) {
       console.log(error.message);

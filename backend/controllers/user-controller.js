@@ -36,7 +36,7 @@ const decodeToken = (token) => {
 const generateProfileURL = (firstName, lastName) => {
   const baseURL = `http://localhost:3000`;
 
-  return `${baseURL}/public-profile/${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
+  return `${baseURL}/profile/${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
 };
 
 const loginUser = async (req, res) => {
@@ -50,7 +50,7 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid(password)) {
       return res
         .status(400)
-        .json({ error: "Please provide a valid password." });
+        .json({ error: "Password should be 6 to 8 characters." });
     }
 
     const user = await User.findOne({ email });
@@ -78,7 +78,9 @@ const registerUser = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
 
     if (!isNameValid(firstName, lastName)) {
-      return res.status(400).json({ error: "Please provide a valid name." });
+      return res
+        .status(400)
+        .json({ error: "Name should not contain any whitespaces." });
     }
 
     if (!isEmailValid(email)) {
@@ -88,7 +90,7 @@ const registerUser = async (req, res) => {
     if (!isPasswordValid(password)) {
       return res
         .status(400)
-        .json({ error: "Please provide a valid password." });
+        .json({ error: "Password should be 6 to 8 characters." });
     }
 
     const existingUser = await User.findOne({ email });
@@ -127,30 +129,34 @@ const createCodechefProfile = async (req, res) => {
       const data = await response.json();
       console.log(data);
 
-      const token = req.headers.authorization.split(" ")[1];
-      const userId = decodeToken(token);
-      const user = await User.findOne({ _id: userId });
+      if (data.success === true) {
+        const token = req.headers.authorization.split(" ")[1];
+        const userId = decodeToken(token);
+        const user = await User.findOne({ _id: userId });
 
-      if (user) {
-        const { globalRank, stars, currentRating, highestRating } = data;
-        user.codechef = {
-          username,
-          globalRank,
-          stars,
-          currentRating,
-          highestRating,
-        };
+        if (user) {
+          const { globalRank, stars, currentRating, highestRating } = data;
+          user.codechef = {
+            username,
+            globalRank,
+            stars,
+            currentRating,
+            highestRating,
+          };
 
-        await user.save();
+          await user.save();
 
-        res
-          .status(200)
-          .json({ message: "Codechef profile created successfully!", user });
+          res
+            .status(200)
+            .json({ message: "Codechef profile created successfully!", user });
+        } else {
+          res.status(404).json({ error: "User not found." });
+        }
       } else {
-        res.status(404).json({ error: "User not found." });
+        res.status(404).json({ error: "Invalid username." });
       }
     } else {
-      res.status(500).json({ error: "Failed to fetch CodeChef data." });
+      res.status(500).json({ error: "Failed to fetch Codechef data." });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error." });
@@ -173,31 +179,35 @@ const createLeetcodeProfile = async (req, res) => {
       const userId = decodeToken(token);
       const user = await User.findOne({ _id: userId });
 
-      if (user) {
-        const {
-          ranking,
-          contributionPoints,
-          acceptanceRate,
-          totalSolved,
-          totalQuestions,
-        } = data;
+      if (data.status === "success") {
+        if (user) {
+          const {
+            ranking,
+            contributionPoints,
+            acceptanceRate,
+            totalSolved,
+            totalQuestions,
+          } = data;
 
-        user.leetcode = {
-          username,
-          ranking,
-          contributionPoints,
-          acceptanceRate,
-          totalSolved,
-          totalQuestions,
-        };
+          user.leetcode = {
+            username,
+            ranking,
+            contributionPoints,
+            acceptanceRate,
+            totalSolved,
+            totalQuestions,
+          };
 
-        await user.save();
+          await user.save();
 
-        res
-          .status(200)
-          .json({ message: "Leetcode profile created successfully!", user });
+          res
+            .status(200)
+            .json({ message: "Leetcode profile created successfully!", user });
+        } else {
+          res.status(404).json({ error: "User not found." });
+        }
       } else {
-        res.status(404).json({ error: "User not found." });
+        res.status(404).json({ error: "Invalid username." });
       }
     } else {
       res.status(500).json({ error: "Failed to fetch Leetcode data." });
@@ -236,8 +246,10 @@ const updateUserProfile = async (req, res) => {
     if (user) {
       const formData = req.body;
 
-      if (!isNameValid(firstName, lastName)) {
-        return res.status(400).json({ error: "Please provide a valid name." });
+      if (!isNameValid(formData.firstName, formData.lastName)) {
+        return res
+          .status(400)
+          .json({ error: "Name should not contain any whitespaces." });
       }
 
       user.firstName = formData.firstName;
@@ -245,7 +257,7 @@ const updateUserProfile = async (req, res) => {
 
       await user.save();
 
-      res.json({ message: "Profile updated successfully!", user });
+      res.json({ message: "Account updated successfully!", user });
     } else {
       return res.status(404).json({ error: "User not found." });
     }

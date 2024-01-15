@@ -8,6 +8,13 @@
   margin-top: 10px;
 }
 
+.user-dashboard .loading-msg {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
 .profile-cards {
   margin: 20px 20px;
   display: flex;

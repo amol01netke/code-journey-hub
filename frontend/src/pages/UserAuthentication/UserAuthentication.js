@@ -1,7 +1,7 @@
 import "./UserAuthentication.css";
 import { useState } from "react";
 import React from "react";
-import cjh_logo from "../../assets/cjh_logo.png";
+import cjh_logo from "../../assets/cjh_logo_black.svg";
 import { Link } from "react-router-dom";
 
 const UserAuthentication = (props) => {
@@ -39,9 +39,11 @@ const UserAuthentication = (props) => {
         localStorage.setItem("token", data.token);
 
         props.setIsLoggedIn(true);
+        alert(data.message);
       } else {
         const error = await response.json();
         console.log(error);
+        alert(error.error);
       }
     } catch (error) {
       console.log(error.message);
@@ -72,9 +74,11 @@ const UserAuthentication = (props) => {
         localStorage.setItem("token", data.token);
 
         props.setIsLoggedIn(true);
+        alert(data.message);
       } else {
         const error = await response.json();
         console.log(error);
+        alert(error.error);
       }
     } catch (error) {
       console.log(error.message);
