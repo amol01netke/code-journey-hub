@@ -30,7 +30,7 @@ const PublicProfile = (props) => {
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/api/get-user-profile",
+          "https://codejourneyhub.onrender.com/api/get-user-profile",
           {
             method: "GET",
             headers: {

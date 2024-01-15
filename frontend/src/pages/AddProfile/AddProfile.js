@@ -16,7 +16,7 @@ const AddProfile = (props) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/create-${selectedOption}-profile`,
+        `https://codejourneyhub.onrender.com/api/create-${selectedOption}-profile`,
         {
           method: "POST",
           headers: {

@@ -35,7 +35,7 @@ const UserDashboard = (props) => {
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/api/get-user-profile",
+          "https://codejourneyhub.onrender.com/api/get-user-profile",
           {
             method: "GET",
             headers: {
@@ -89,7 +89,7 @@ const UserDashboard = (props) => {
   const deleteProfile = async (data, platform) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/delete-${platform}-profile`,
+        `https://codejourneyhub.onrender.com/api/delete-${platform}-profile`,
         {
           method: "DELETE",
           headers: {

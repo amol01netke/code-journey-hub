@@ -34,7 +34,7 @@ const decodeToken = (token) => {
 };
 
 const generateProfileURL = (firstName, lastName) => {
-  const baseURL = `http://localhost:3000`;
+  const baseURL = `https://codejourneyhub.netlify.app`;
 
   return `${baseURL}/profile/${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
 };
