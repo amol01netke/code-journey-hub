@@ -39,7 +39,7 @@ const decodeToken = (token) => {
 };
 
 const generateProfileURL = (firstName, lastName) => {
-  const baseURL = `https://code-journey-hub.netlify.app/`;
+  const baseURL = `https://code-journey-hub.netlify.app`;
 
   return `${baseURL}/profile/${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
 };
