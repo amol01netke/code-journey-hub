@@ -1,5 +1,6 @@
 import "./PublicProfile.css";
-import React, { useParams, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import codechef_logo from "../../assets/codechef_logo.jpg";
 import leetcode_logo from "../../assets/leetcode_logo.png";
 
