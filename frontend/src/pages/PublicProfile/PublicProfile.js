@@ -78,7 +78,7 @@ const PublicProfile = () => {
     };
 
     fetchPublicProfile();
-  }, []);
+  }, [username]);
 
   return isLoading ? (
     <React.Fragment>

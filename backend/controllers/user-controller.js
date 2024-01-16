@@ -299,7 +299,7 @@ const getUserProfile = async (req, res) => {
 
 const getPublicProfile = async (req, res) => {
   try {
-    const username = req.headers.username;
+    const username = req.params.username;
 
     const user = await User.findOne({ username });
 
