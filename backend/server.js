@@ -31,7 +31,10 @@ server.delete(
 );
 
 server.get("/api/get-user-profile", userController.getUserProfile);
-server.get("/api/get-public-profile", userController.getPublicProfile);
+server.get(
+  "/api/get-public-profile/:username",
+  userController.getPublicProfile
+);
 server.put("/api/update-user-profile", userController.updateUserProfile);
 
 //connect with database and start the server
