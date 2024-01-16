@@ -301,7 +301,7 @@ const getPublicProfile = async (req, res) => {
   try {
     const username = req.params.username;
 
-    const user = await User.findOne({ username: username });
+    const user = await User.findOne({ username });
 
     if (user) {
       res.status(200).json(user);
