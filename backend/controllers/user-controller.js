@@ -19,6 +19,10 @@ const isPasswordValid = (password) => {
   );
 };
 
+const createUsername = (email) => {
+  return `${email.toLowerCase().replace(/@gmail\.com$/, "")}`;
+};
+
 const createToken = (id) => {
   return jwt.sign({ userId: id }, process.env.JWT_KEY || "cjhwebsite", {
     expiresIn: "1h",
@@ -97,12 +101,13 @@ const registerUser = async (req, res) => {
 
     if (!existingUser) {
       const hashedPassword = await bcrypt.hash(password, 10);
-
+      const username = createUsername(email);
       const shareableURL = generateProfileURL(firstName, lastName);
 
       const user = await User.create({
         firstName,
         lastName,
+        username,
         email,
         password: hashedPassword,
         profileURL: shareableURL,
@@ -290,6 +295,22 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const getPublicProfile = async (req, res) => {
+  try {
+    const username = req.headers.username;
+
+    const user = await User.findOne({ username });
+
+    if (username) {
+      res.status(200).json(user);
+    } else {
+      return res.status(404).json({ error: "User not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
 const updateUserProfile = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
@@ -331,4 +352,5 @@ exports.createLeetcodeProfile = createLeetcodeProfile;
 exports.deleteLeetcodeProfile = deleteLeetcodeProfile;
 
 exports.getUserProfile = getUserProfile;
+exports.getPublicProfile = getPublicProfile;
 exports.updateUserProfile = updateUserProfile;

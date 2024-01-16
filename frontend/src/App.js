@@ -53,7 +53,7 @@ const App = () => {
         <Route
           path="/profile/:username"
           exact
-          render={() => <PublicProfile token={storedToken} />}
+          render={() => <PublicProfile />}
         />
         <Redirect to="/user-dashboard" />
       </Switch>
@@ -70,7 +70,7 @@ const App = () => {
         <Route
           path="/profile/:username"
           exact
-          render={() => <PublicProfile token={storedToken} />}
+          render={() => <PublicProfile />}
         />
         <Redirect to="/user-authentication" />
       </Switch>

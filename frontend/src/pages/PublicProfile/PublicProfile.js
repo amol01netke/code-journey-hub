@@ -1,10 +1,10 @@
 import "./PublicProfile.css";
-import React, { useState, useEffect } from "react";
+import React, { useParams, useState, useEffect } from "react";
 import codechef_logo from "../../assets/codechef_logo.jpg";
 import leetcode_logo from "../../assets/leetcode_logo.png";
 
 const PublicProfile = (props) => {
-  const userToken = props.token;
+  const { username } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState("");
@@ -27,15 +27,14 @@ const PublicProfile = (props) => {
   });
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchPublicProfile = async () => {
       try {
         const response = await fetch(
-          "https://code-journey-hub.onrender.com/api/get-user-profile",
+          `https://code-journey-hub.onrender.com/api/get-public-profile?username=${username}`,
           {
             method: "GET",
             headers: {
               "content-type": "application/json",
-              Authorization: `Bearer ${userToken}`,
             },
           }
         );
@@ -71,13 +70,14 @@ const PublicProfile = (props) => {
         } else {
           const error = await response.json();
           console.log(error);
+          alert(error.error);
         }
       } catch (error) {
         console.log(error.message);
       }
     };
 
-    fetchUserProfile();
+    fetchPublicProfile();
   }, [userToken]);
 
   return isLoading ? (
