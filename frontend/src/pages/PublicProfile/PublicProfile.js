@@ -29,6 +29,7 @@ const PublicProfile = () => {
 
   useEffect(() => {
     const fetchPublicProfile = async () => {
+      console.log(username);
       try {
         const response = await fetch(
           `https://code-journey-hub.onrender.com/api/get-public-profile?username=${username}`,
