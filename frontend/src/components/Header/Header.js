@@ -29,7 +29,7 @@ const Header = (props) => {
         className="header-menu-link"
         onClick={handleMenuItemClick}
       >
-        <li>Edit Account</li>
+        <li>Edit My Account</li>
       </Link>
       <li onClick={handleLogout} className="logout-btn">
         Logout

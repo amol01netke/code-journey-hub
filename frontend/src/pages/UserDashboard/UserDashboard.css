@@ -142,6 +142,10 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .user-dashboard {
+    min-height: 100vh;
+  }
+
   .profile-cards {
     flex-direction: column;
   }

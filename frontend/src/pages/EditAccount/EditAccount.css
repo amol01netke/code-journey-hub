@@ -91,6 +91,10 @@
 }
 
 @media only screen and (max-width: 767px) {
+  .edit-account {
+    min-height: 100vh;
+  }
+
   .edit-account-form {
     width: 90vw;
   }

@@ -113,4 +113,18 @@
   .header-menu li:nth-child(1) {
     display: none;
   }
+
+  .header-icon {
+    height: 60px;
+    width: 60px;
+    padding: 10px 10px;
+  }
+
+  .header-logo h1 {
+    font-size: 1.8em;
+  }
+
+  .profile-icon {
+    margin-right: 20px 20px;
+  }
 }
