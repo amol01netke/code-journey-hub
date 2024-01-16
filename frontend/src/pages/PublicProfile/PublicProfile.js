@@ -3,7 +3,7 @@ import React, { useParams, useState, useEffect } from "react";
 import codechef_logo from "../../assets/codechef_logo.jpg";
 import leetcode_logo from "../../assets/leetcode_logo.png";
 
-const PublicProfile = (props) => {
+const PublicProfile = () => {
   const { username } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -78,7 +78,7 @@ const PublicProfile = (props) => {
     };
 
     fetchPublicProfile();
-  }, [userToken]);
+  }, []);
 
   return isLoading ? (
     <React.Fragment>
