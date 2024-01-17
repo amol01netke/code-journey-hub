@@ -11,10 +11,8 @@ const UserDashboard = (props) => {
   const userToken = props.token;
 
   const [isLoading, setIsLoading] = useState(true);
-
   const [name, setName] = useState("");
   const [profileURL, setProfileURL] = useState("");
-
   const [codechefData, setCodechefData] = useState({
     username: "",
     rank: "",

@@ -9,7 +9,6 @@ const PublicProfile = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState("");
-
   const [codechefData, setCodechefData] = useState({
     username: "",
     rank: "",
@@ -17,7 +16,6 @@ const PublicProfile = () => {
     currentRating: "",
     highestRating: "",
   });
-
   const [leetcodeData, setLeetcodeData] = useState({
     username: "",
     rank: "",
