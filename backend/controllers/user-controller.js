@@ -34,10 +34,6 @@ const decodeToken = (token) => {
   return decodedToken.userId;
 };
 
-const createUsername = (email) => {
-  return `${email.toLowerCase().replace(/@gmail\.com/, "")}`;
-};
-
 //get
 const getUserProfile = async (req, res) => {
   try {
@@ -60,11 +56,13 @@ const getUserProfile = async (req, res) => {
 const getUserProfileByUsername = async (req, res) => {
   try {
     const username = req.params.username;
+
     const email = `${username}@gmail.com`;
 
     const user = await User.findOne({ email });
 
     if (user) {
+      console.log(user);
       res.status(200).json(user);
     } else {
       return res.status(404).json({ error: "User not found." });
