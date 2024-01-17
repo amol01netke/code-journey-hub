@@ -19,10 +19,6 @@ const isPasswordValid = (password) => {
   );
 };
 
-const createUsername = (email) => {
-  return `${email.toLowerCase().replace(/@gmail\.com$/, "")}`;
-};
-
 const createToken = (id) => {
   return jwt.sign({ userId: id }, process.env.JWT_KEY || "cjhwebsite", {
     expiresIn: "1h",
@@ -35,12 +31,6 @@ const decodeToken = (token) => {
   });
 
   return decodedToken.userId;
-};
-
-const generateProfileURL = (username) => {
-  const baseURL = `https://code-journey-hub.netlify.app`;
-
-  return `${baseURL}/profile/${username}`;
 };
 
 const loginUser = async (req, res) => {
@@ -101,13 +91,13 @@ const registerUser = async (req, res) => {
 
     if (!existingUser) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      const username = createUsername(email);
-      const shareableURL = generateProfileURL(username);
+      const shareableURL = `${
+        process.env.BASE_URL
+      }/profile/cjh_${email.toLowerCase()}`;
 
       const user = await User.create({
         firstName,
         lastName,
-        username,
         email,
         password: hashedPassword,
         profileURL: shareableURL,
@@ -298,8 +288,9 @@ const getUserProfile = async (req, res) => {
 const getPublicProfile = async (req, res) => {
   try {
     const username = req.params.username;
+    const profileURL = `${process.env.BASE_URL}/profile/cjh_${username}`;
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ profileURL });
 
     if (user) {
       res.status(200).json(user);
