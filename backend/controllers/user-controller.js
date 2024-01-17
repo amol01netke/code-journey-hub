@@ -34,6 +34,10 @@ const decodeToken = (token) => {
   return decodedToken.userId;
 };
 
+const createUsername = (email) => {
+  return `${email.toLowerCase().replace(/@gmail\.com/, "")}`;
+};
+
 //get
 const getUserProfile = async (req, res) => {
   try {
@@ -157,15 +161,12 @@ const createProfileURL = async (req, res) => {
     const user = await User.findOne({ _id: userId });
 
     if (user) {
-      const url = `${process.env.BASE_URL}/profile/cjh_${user.email
-        .toLowerCase()
-        .replace(/@gmail\.com/, "")}`;
-
-      user.profileURL = url;
+      const username = createUsername(user.email);
+      user.profileURL = `${process.env.BASE_URL}/profile/${username}`;
 
       await user.save();
 
-      res.status(404).json({ message: `Link created successfully : ${url}` });
+      res.status(404).json({ message: `Link created successfully!` });
     } else {
       res.status(404).json({ error: "User not found." });
     }
