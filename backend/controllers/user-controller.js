@@ -40,9 +40,7 @@ const decodeToken = (token) => {
 const generateProfileURL = (email) => {
   const baseURL = `https://code-journey-hub.netlify.app`;
 
-  return `${baseURL}/profile/${email
-    .toLowerCase()
-    .replace(/@gmail\.com$/, "")}`;
+  return `${baseURL}/profile/${username}`;
 };
 
 const loginUser = async (req, res) => {
@@ -104,7 +102,7 @@ const registerUser = async (req, res) => {
     if (!existingUser) {
       const hashedPassword = await bcrypt.hash(password, 10);
       const username = createUsername(email);
-      const shareableURL = generateProfileURL(email);
+      const shareableURL = generateProfileURL(username);
 
       const user = await User.create({
         firstName,
