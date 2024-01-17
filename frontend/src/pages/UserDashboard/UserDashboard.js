@@ -11,6 +11,7 @@ const UserDashboard = (props) => {
   const userToken = props.token;
 
   const [isLoading, setIsLoading] = useState(true);
+  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [profileURL, setProfileURL] = useState("");
   const [codechefData, setCodechefData] = useState({
@@ -47,9 +48,8 @@ const UserDashboard = (props) => {
           const data = await response.json();
           console.log(data);
 
+          setEmail(data.email);
           setName(`${data.firstName} ${data.lastName}`);
-
-          if (data.profileURL) setProfileURL(data.profileURL);
 
           if (data.codechef) {
             setCodechefData({
@@ -131,47 +131,16 @@ const UserDashboard = (props) => {
     }
   };
 
-  const copyProfileURL = (url) => {
+  const generateProfileURL = async () => {
+    const username = `${email.toLowerCase().replace(/@gmail\.com/, "")}`;
+    const profileURL = `https://code-journey-hub.netlify.app/profile/${username}`;
     if (linkRef.current) {
       linkRef.current.value = url;
       linkRef.current.select();
       document.execCommand("copy");
 
-      console.log(`Link copied to clipboard : ${url}`);
+      console.log(`Link copied to clipboard : ${profileURL}`);
       alert(`Link copied to clipboard : ${url}`);
-    }
-  };
-
-  const generateProfileURL = async () => {
-    if (!profileURL) {
-      try {
-        const response = await fetch(
-          `https://code-journey-hub.onrender.com/api/create-profile-url`,
-          {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-              Authorization: `Bearer ${userToken}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data.message);
-
-          setProfileURL(data.profileURL);
-          copyProfileURL(data.profileURL);
-        } else {
-          const error = await response.json();
-          console.log(error.error);
-          alert(error.error);
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
-    } else {
-      copyProfileURL(profileURL);
     }
   };
 
