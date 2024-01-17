@@ -152,29 +152,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-const createProfileURL = async (req, res) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-
-    const userId = decodeToken(token);
-
-    const user = await User.findOne({ _id: userId });
-
-    if (user) {
-      const username = createUsername(user.email);
-      user.profileURL = `${process.env.BASE_URL}/profile/${username}`;
-
-      await user.save();
-
-      res.status(404).json({ message: `Link created successfully!` });
-    } else {
-      res.status(404).json({ error: "User not found." });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error." });
-  }
-};
-
 const createCodechefProfile = async (req, res) => {
   try {
     //fetch data from codechef api
@@ -366,7 +343,6 @@ exports.getUserProfileByUsername = getUserProfileByUsername;
 
 exports.loginUser = loginUser;
 exports.registerUser = registerUser;
-exports.createProfileURL = createProfileURL;
 exports.createCodechefProfile = createCodechefProfile;
 exports.createLeetcodeProfile = createLeetcodeProfile;
 

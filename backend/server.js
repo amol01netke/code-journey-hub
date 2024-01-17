@@ -20,7 +20,6 @@ server.get(
 //post
 server.post("/api/login", userController.loginUser);
 server.post("/api/register", userController.registerUser);
-server.post("api/create-profile-url", userController.createProfileURL);
 server.post(
   "/api/create-codechef-profile",
   userController.createCodechefProfile

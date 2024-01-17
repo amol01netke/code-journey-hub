@@ -13,7 +13,6 @@ const UserDashboard = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [profileURL, setProfileURL] = useState("");
   const [codechefData, setCodechefData] = useState({
     username: "",
     rank: "",
@@ -132,8 +131,11 @@ const UserDashboard = (props) => {
   };
 
   const generateProfileURL = () => {
-    const username = `${email.toLowerCase().replace(/@gmail\.com/, "")}`;
-    const profileURL = `https://code-journey-hub.netlify.app/profile/${username}`;
+    const profileURL = `
+        https://code-journey-hub.netlify.app/profile/${email
+          .toLowerCase()
+          .replace(/@gmail\.com/, "")}`;
+
     if (linkRef.current) {
       linkRef.current.value = profileURL;
       linkRef.current.select();
