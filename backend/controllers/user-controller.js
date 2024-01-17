@@ -55,7 +55,7 @@ const getUserProfile = async (req, res) => {
 
 const getUserProfileByUsername = async (req, res) => {
   try {
-    const username = req.params.username;
+    const { username } = req.params;
 
     const email = `${username}@gmail.com`;
 

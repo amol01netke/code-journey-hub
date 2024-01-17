@@ -1,6 +1,5 @@
 {
   "env": {
-    "BASE_URL": "https://code-journey-hub.netlify.app",
     "JWT_KEY": "cjhwebsite",
     "DB_USER": "amol01netke",
     "DB_PASSWORD": "amolsaniya7175",
