@@ -37,7 +37,7 @@ const decodeToken = (token) => {
   return decodedToken.userId;
 };
 
-const generateProfileURL = (email) => {
+const generateProfileURL = (username) => {
   const baseURL = `https://code-journey-hub.netlify.app`;
 
   return `${baseURL}/profile/${username}`;
