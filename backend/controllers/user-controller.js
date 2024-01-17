@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require(`../models/user.js`);
 
+//functions
 const isNameValid = (firstName, lastName) => {
   const nameRegex = /^[^\s][a-zA-Z\s]+[^\s]$/;
   return nameRegex.test(firstName, lastName);
@@ -33,6 +34,43 @@ const decodeToken = (token) => {
   return decodedToken.userId;
 };
 
+//get
+const getUserProfile = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+
+    const userId = decodeToken(token);
+
+    const user = await User.findOne({ _id: userId });
+
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      return res.status(404).json({ error: "User not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+const getUserProfileByUsername = async (req, res) => {
+  try {
+    const username = req.params.username;
+    const email = `${username}@gmail.com`;
+
+    const user = await User.findOne({ email });
+
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      return res.status(404).json({ error: "User not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+//post
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -91,16 +129,12 @@ const registerUser = async (req, res) => {
 
     if (!existingUser) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      const shareableURL = `${
-        process.env.BASE_URL
-      }/profile/cjh_${email.toLowerCase()}`;
 
       const user = await User.create({
         firstName,
         lastName,
         email,
         password: hashedPassword,
-        profileURL: shareableURL,
       });
 
       const token = createToken(user._id);
@@ -108,6 +142,32 @@ const registerUser = async (req, res) => {
       res.status(201).json({ message: "User registered successfully!", token });
     } else {
       return res.status(400).json({ error: "Email is already registered." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+const createProfileURL = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+
+    const userId = decodeToken(token);
+
+    const user = await User.findOne({ _id: userId });
+
+    if (user) {
+      const url = `${process.env.BASE_URL}/profile/cjh_${user.email
+        .toLowerCase()
+        .replace(/@gmail\.com/, "")}`;
+
+      user.profileURL = url;
+
+      await user.save();
+
+      res.status(404).json({ message: `Link created successfully : ${url}` });
+    } else {
+      res.status(404).json({ error: "User not found." });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error." });
@@ -153,32 +213,6 @@ const createCodechefProfile = async (req, res) => {
       }
     } else {
       res.status(500).json({ error: "Failed to fetch Codechef data." });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error." });
-  }
-};
-
-const deleteCodechefProfile = async (req, res) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    const userId = decodeToken(token);
-    const user = await User.findOne({ _id: userId });
-
-    if (user) {
-      user.codechef = {
-        username: "",
-        globalRank: "",
-        stars: "",
-        currentRating: "",
-        highestRating: "",
-      };
-
-      await user.save();
-
-      res.status(200).json({ message: "Profile deleted successfully!", user });
-    } else {
-      res.status(404).json({ error: "User not found." });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error." });
@@ -240,68 +274,7 @@ const createLeetcodeProfile = async (req, res) => {
   }
 };
 
-const deleteLeetcodeProfile = async (req, res) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    const userId = decodeToken(token);
-    const user = await User.findOne({ _id: userId });
-
-    if (user) {
-      user.leetcode = {
-        username: "",
-        ranking: "",
-        contributionPoints: "",
-        acceptanceRate: "",
-        totalSolved: "",
-        totalQuestions: "",
-      };
-
-      await user.save();
-
-      res.status(200).json({ message: "Profile deleted successfully!", user });
-    } else {
-      res.status(404).json({ error: "User not found." });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error." });
-  }
-};
-
-const getUserProfile = async (req, res) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-
-    const userId = decodeToken(token);
-
-    const user = await User.findOne({ _id: userId });
-
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      return res.status(404).json({ error: "User not found." });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error." });
-  }
-};
-
-const getPublicProfile = async (req, res) => {
-  try {
-    const username = req.params.username;
-    const profileURL = `${process.env.BASE_URL}/profile/cjh_${username}`;
-
-    const user = await User.findOne({ profileURL });
-
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      return res.status(404).json({ error: "User not found." });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error." });
-  }
-};
-
+//put
 const updateUserProfile = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
@@ -333,15 +306,70 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-exports.loginUser = loginUser;
-exports.registerUser = registerUser;
+//delete
+const deleteCodechefProfile = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = decodeToken(token);
+    const user = await User.findOne({ _id: userId });
 
-exports.createCodechefProfile = createCodechefProfile;
-exports.deleteCodechefProfile = deleteCodechefProfile;
+    if (user) {
+      user.codechef = {
+        username: "",
+        globalRank: "",
+        stars: "",
+        currentRating: "",
+        highestRating: "",
+      };
 
-exports.createLeetcodeProfile = createLeetcodeProfile;
-exports.deleteLeetcodeProfile = deleteLeetcodeProfile;
+      await user.save();
+
+      res.status(200).json({ message: "Profile deleted successfully!", user });
+    } else {
+      res.status(404).json({ error: "User not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+const deleteLeetcodeProfile = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = decodeToken(token);
+    const user = await User.findOne({ _id: userId });
+
+    if (user) {
+      user.leetcode = {
+        username: "",
+        ranking: "",
+        contributionPoints: "",
+        acceptanceRate: "",
+        totalSolved: "",
+        totalQuestions: "",
+      };
+
+      await user.save();
+
+      res.status(200).json({ message: "Profile deleted successfully!", user });
+    } else {
+      res.status(404).json({ error: "User not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
 
 exports.getUserProfile = getUserProfile;
-exports.getPublicProfile = getPublicProfile;
+exports.getUserProfileByUsername = getUserProfileByUsername;
+
+exports.loginUser = loginUser;
+exports.registerUser = registerUser;
+exports.createProfileURL = createProfileURL;
+exports.createCodechefProfile = createCodechefProfile;
+exports.createLeetcodeProfile = createLeetcodeProfile;
+
 exports.updateUserProfile = updateUserProfile;
+
+exports.deleteCodechefProfile = deleteCodechefProfile;
+exports.deleteLeetcodeProfile = deleteLeetcodeProfile;

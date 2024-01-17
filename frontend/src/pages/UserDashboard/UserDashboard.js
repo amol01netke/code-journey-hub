@@ -48,7 +48,8 @@ const UserDashboard = (props) => {
           console.log(data);
 
           setName(`${data.firstName} ${data.lastName}`);
-          setProfileURL(`${data.profileURL}`);
+
+          if (data.profileURL) setProfileURL(data.profileURL);
 
           if (data.codechef) {
             setCodechefData({
@@ -130,14 +131,47 @@ const UserDashboard = (props) => {
     }
   };
 
-  const copyURL = () => {
+  const copyProfileURL = (url) => {
     if (linkRef.current) {
-      linkRef.current.value = profileURL;
+      linkRef.current.value = url;
       linkRef.current.select();
       document.execCommand("copy");
 
-      console.log(`Link copied to clipboard. ${profileURL}`);
-      alert(`Link copied to clipboard : ${profileURL}`);
+      console.log(`Link copied to clipboard : ${url}`);
+      alert(`Link copied to clipboard : ${url}`);
+    }
+  };
+
+  const generateProfileURL = async () => {
+    if (!profileURL) {
+      try {
+        const response = await fetch(
+          `https://code-journey-hub.onrender.com/api/create-profile-url`,
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data.message);
+
+          setProfileURL(data.profileURL);
+          copyProfileURL(data.profileURL);
+        } else {
+          const error = await response.json();
+          console.log(error.error);
+          alert(error.error);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    } else {
+      copyProfileURL(profileURL);
     }
   };
 
@@ -240,7 +274,7 @@ const UserDashboard = (props) => {
           </div>
         </div>
         <div className="link-generator">
-          <button className="share-url" onClick={copyURL}>
+          <button className="share-url" onClick={generateProfileURL}>
             <FontAwesomeIcon icon={faCopy} />
             <span> </span>
             Copy Profile URL

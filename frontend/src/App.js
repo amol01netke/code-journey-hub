@@ -13,7 +13,7 @@ import AboutUs from "./pages/AboutUs/AboutUs";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import React from "react";
-import PublicProfile from "./pages/PublicProfile/PublicProfile";
+import UserProfile from "./pages/UserProfile/UserProfile";
 
 const App = () => {
   const [storedToken, setStoredToken] = useState("");
@@ -50,11 +50,7 @@ const App = () => {
           render={() => <EditAccount token={storedToken} />}
         />
         <Route path="/about-us" exact render={() => <AboutUs />} />
-        <Route
-          path="/profile/:username"
-          exact
-          render={() => <PublicProfile />}
-        />
+        <Route path="/profile/:username" exact render={() => <UserProfile />} />
         <Redirect to="/user-dashboard" />
       </Switch>
     );
@@ -67,11 +63,7 @@ const App = () => {
           render={() => <UserAuthentication setIsLoggedIn={setIsLoggedIn} />}
         />
         <Route path="/about-us" exact render={() => <AboutUs />} />
-        <Route
-          path="/profile/:username"
-          exact
-          render={() => <PublicProfile />}
-        />
+        <Route path="/profile/:username" exact render={() => <UserProfile />} />
         <Redirect to="/user-authentication" />
       </Switch>
     );

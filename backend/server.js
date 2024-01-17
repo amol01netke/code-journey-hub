@@ -9,33 +9,39 @@ server.use(cors());
 server.use(express.json());
 
 //routes
+
+//get
+server.get("/api/get-user-profile", userController.getUserProfile);
+server.get(
+  "/api/get-user-profile-by-username/:username",
+  userController.getUserProfileByUsername
+);
+
+//post
 server.post("/api/login", userController.loginUser);
 server.post("/api/register", userController.registerUser);
-
+server.post("api/create-profile-url", userController.createProfileURL);
 server.post(
   "/api/create-codechef-profile",
   userController.createCodechefProfile
 );
-server.delete(
-  "/api/delete-codechef-profile",
-  userController.deleteCodechefProfile
-);
-
 server.post(
   "/api/create-leetcode-profile",
   userController.createLeetcodeProfile
+);
+
+//update
+server.put("/api/update-user-profile", userController.updateUserProfile);
+
+//delete
+server.delete(
+  "/api/delete-codechef-profile",
+  userController.deleteCodechefProfile
 );
 server.delete(
   "/api/delete-leetcode-profile",
   userController.deleteLeetcodeProfile
 );
-
-server.get("/api/get-user-profile", userController.getUserProfile);
-server.get(
-  "/api/get-public-profile/:username",
-  userController.getPublicProfile
-);
-server.put("/api/update-user-profile", userController.updateUserProfile);
 
 //connect with database and start the server
 mongoose
