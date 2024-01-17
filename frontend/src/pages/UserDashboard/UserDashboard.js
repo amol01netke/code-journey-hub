@@ -131,16 +131,16 @@ const UserDashboard = (props) => {
     }
   };
 
-  const generateProfileURL = async () => {
+  const generateProfileURL = () => {
     const username = `${email.toLowerCase().replace(/@gmail\.com/, "")}`;
     const profileURL = `https://code-journey-hub.netlify.app/profile/${username}`;
     if (linkRef.current) {
-      linkRef.current.value = url;
+      linkRef.current.value = profileURL;
       linkRef.current.select();
       document.execCommand("copy");
 
       console.log(`Link copied to clipboard : ${profileURL}`);
-      alert(`Link copied to clipboard : ${url}`);
+      alert(`Link copied to clipboard : ${profileURL}`);
     }
   };
 
