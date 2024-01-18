@@ -131,10 +131,9 @@ const UserDashboard = (props) => {
   };
 
   const generateProfileURL = () => {
-    const profileURL = `
-        https://code-journey-hub.netlify.app/user-profile/${email
-          .toLowerCase()
-          .replace(/@gmail\.com/, "")}`;
+    const profileURL = `https://code-journey-hub.netlify.app/user-profile/${email
+      .toLowerCase()
+      .replace(/@gmail\.com/, "")}`;
 
     if (linkRef.current) {
       linkRef.current.value = profileURL;
