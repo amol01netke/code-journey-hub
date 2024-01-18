@@ -51,7 +51,6 @@ const App = () => {
         />
         <Route path="/about-us" exact component={AboutUs} />
         <Route path="/:username" exact component={UserProfile} />
-        <Redirect to="/user-dashboard" />
       </Switch>
     );
   } else {
@@ -64,7 +63,6 @@ const App = () => {
         />
         <Route path="/about-us" exact component={AboutUs} />
         <Route path="/:username" exact component={UserProfile} />
-        <Redirect to="/user-authentication" />
       </Switch>
     );
   }
