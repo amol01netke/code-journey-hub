@@ -5,11 +5,24 @@ const mongoose = require("mongoose");
 const userController = require("./controllers/user-controller");
 
 //middleware
-server.use(cors());
 server.use(express.json());
 
-//routes
+//CORS
+server.use(cors());
 
+//cors headers
+server.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+
+  next();
+});
+
+//routes
 //get
 server.get("/api/get-user-profile", userController.getUserProfile);
 server.get(
