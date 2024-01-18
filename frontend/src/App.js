@@ -50,7 +50,7 @@ const App = () => {
           render={() => <EditAccount token={storedToken} />}
         />
         <Route path="/about-us" exact render={() => <AboutUs />} />
-        <Route path="/:username" exact render={() => <UserProfile />} />
+        <Route path="/profile/:username" exact render={() => <UserProfile />} />
         <Redirect to="/user-dashboard" />
       </Switch>
     );
@@ -63,7 +63,7 @@ const App = () => {
           render={() => <UserAuthentication setIsLoggedIn={setIsLoggedIn} />}
         />
         <Route path="/about-us" exact render={() => <AboutUs />} />
-        <Route path="/:username" exact render={() => <UserProfile />} />
+        <Route path="/profile/:username" exact render={() => <UserProfile />} />
         <Redirect to="/user-authentication" />
       </Switch>
     );
