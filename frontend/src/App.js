@@ -49,8 +49,9 @@ const App = () => {
           exact
           render={() => <EditAccount token={storedToken} />}
         />
-        <Route path="/about-us" exact component={AboutUs} />
-        <Route path="/:username" exact component={UserProfile} />
+        <Route path="/about-us" exact render={() => <AboutUs />} />
+        <Route path="/:username" exact render={() => <UserProfile />} />
+        <Redirect to="/user-dashboard" />
       </Switch>
     );
   } else {
@@ -61,8 +62,9 @@ const App = () => {
           exact
           render={() => <UserAuthentication setIsLoggedIn={setIsLoggedIn} />}
         />
-        <Route path="/about-us" exact component={AboutUs} />
-        <Route path="/:username" exact component={UserProfile} />
+        <Route path="/about-us" exact render={() => <AboutUs />} />
+        <Route path="/:username" exact render={() => <UserProfile />} />
+        <Redirect to="/user-authentication" />
       </Switch>
     );
   }
