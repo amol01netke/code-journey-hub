@@ -58,6 +58,7 @@ const getUserProfileByUsername = async (req, res) => {
     const { username } = req.params;
 
     const email = `${username}@gmail.com`;
+    console.log(email);
 
     const user = await User.findOne({ email });
 

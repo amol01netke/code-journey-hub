@@ -26,7 +26,7 @@ const UserProfile = () => {
   });
 
   useEffect(() => {
-    const fetchPublicProfile = async () => {
+    const fetchUserProfile = async () => {
       console.log(username);
       try {
         const response = await fetch(
@@ -77,7 +77,7 @@ const UserProfile = () => {
       }
     };
 
-    fetchPublicProfile();
+    fetchUserProfile();
   }, [username]);
 
   return isLoading ? (
