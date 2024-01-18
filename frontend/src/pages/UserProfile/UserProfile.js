@@ -29,7 +29,7 @@ const UserProfile = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
-          `https://code-journey-hub.onrender.com/api/get-user-profile-by-username?username=${username}`,
+          `https://code-journey-hub.onrender.com/api/get-user-profile-by-username/${username}`,
           {
             method: "GET",
             headers: {
