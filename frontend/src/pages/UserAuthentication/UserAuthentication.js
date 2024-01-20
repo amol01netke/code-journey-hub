@@ -39,7 +39,8 @@ const UserAuthentication = (props) => {
         const data = await response.json();
         console.log(data);
 
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
 
         props.setIsLoggedIn(true);
         alert(data.message);
@@ -77,7 +78,8 @@ const UserAuthentication = (props) => {
         const data = await response.json();
         console.log(data);
 
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
 
         props.setIsLoggedIn(true);
         alert(data.message);

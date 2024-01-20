@@ -10,6 +10,9 @@ server.use(cors());
 
 /*routes*/
 
+server.get("/api/refresh-token", userController.refreshToken);
+server.post("/api/check-token-expiry", userController.checkTokenExpiry);
+
 //get
 server.get("/api/get-user-profile", userController.getUserProfile);
 server.get(

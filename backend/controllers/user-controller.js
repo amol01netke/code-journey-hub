@@ -27,11 +27,61 @@ const createToken = (id) => {
 };
 
 const decodeToken = (token) => {
-  const decodedToken = jwt.verify(token, process.env.JWT_KEY || "cjhwebsite", {
-    expiresIn: "1h",
-  });
+  const decodedToken = jwt.verify(
+    token,
+    process.env.JWT_ACCESS_KEY || "cjhwebsite",
+    {
+      expiresIn: "1h",
+    }
+  );
 
   return decodedToken.userId;
+};
+
+const refreshToken = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+
+    const userId = decodeToken(token);
+
+    const newToken = createToken(userId);
+
+    res
+      .status(200)
+      .json({ message: "Token refreshed successfully!", newToken });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+const checkTokenExpiry = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(404).json({ error: "Token is missing" });
+    }
+
+    try {
+      const decodedToken = jwt.verify(
+        token,
+        process.env.JWT_ACCESS_KEY || "cjhwebsite",
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      const expirationTime = decodedToken.exp * 1000; // Convert seconds to milliseconds
+
+      const currentTime = Date.now();
+
+      res.status(200).json({ isExpired: currentTime > expirationTime });
+    } catch (error) {
+      res.status(404).json({ error: "Error!" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error." });
+  }
 };
 
 //get
@@ -99,7 +149,10 @@ const loginUser = async (req, res) => {
 
       const token = createToken(user._id);
 
-      res.status(200).json({ message: "User logged in successfully!", token });
+      res.status(200).json({
+        message: "User logged in successfully!",
+        token,
+      });
     } else {
       return res.status(404).json({ error: "Email is not registered." });
     }
@@ -336,6 +389,9 @@ const deleteLeetcodeProfile = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error." });
   }
 };
+
+exports.refreshToken = refreshToken;
+exports.checkTokenExpiry = checkTokenExpiry;
 
 exports.getUserProfile = getUserProfile;
 exports.getUserProfileByUsername = getUserProfileByUsername;

@@ -22,11 +22,62 @@ const App = () => {
   useEffect(() => {
     const localToken = localStorage.getItem("token");
 
-    if (localToken) {
+    if (!isTokenExpired(localToken)) {
       setStoredToken(localToken);
       setIsLoggedIn(true);
     }
   }, []);
+
+  const refreshToken = async (token) => {
+    try {
+      const response = await fetch(
+        "https://code-journey-hub.onrender.com/api/refresh-token",
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setStoredToken(data.newToken);
+      } else {
+        const error = await response.json();
+        console.log(error.error);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const isTokenExpired = async (token) => {
+    try {
+      const response = await fetch(
+        "https://code-journey-hub.onrender.com/api/check-token-expiry",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ token }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.isExpired) {
+          await refreshToken(token);
+          setIsLoggedIn(true);
+        }
+      } else {
+        const error = await response.json();
+        console.log(error.error);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   let routes;
   if (isLoggedIn) {
