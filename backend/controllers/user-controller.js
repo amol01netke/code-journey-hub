@@ -27,13 +27,9 @@ const createToken = (id) => {
 };
 
 const decodeToken = (token) => {
-  const decodedToken = jwt.verify(
-    token,
-    process.env.JWT_ACCESS_KEY || "cjhwebsite",
-    {
-      expiresIn: "1h",
-    }
-  );
+  const decodedToken = jwt.verify(token, process.env.JWT_KEY || "cjhwebsite", {
+    expiresIn: "1h",
+  });
 
   return decodedToken.userId;
 };
@@ -65,7 +61,7 @@ const checkTokenExpiry = async (req, res) => {
     try {
       const decodedToken = jwt.verify(
         token,
-        process.env.JWT_ACCESS_KEY || "cjhwebsite",
+        process.env.JWT_KEY || "cjhwebsite",
         {
           expiresIn: "1h",
         }
