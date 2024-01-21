@@ -5,7 +5,7 @@ const User = require(`../models/user.js`);
 //functions
 const isNameValid = (firstName, lastName) => {
   const nameRegex = /^[^\s][a-zA-Z\s]+[^\s]$/;
-  return nameRegex.test(firstName, lastName);
+  return nameRegex.test(firstName + " " + lastName);
 };
 
 const isEmailValid = (email) => {
