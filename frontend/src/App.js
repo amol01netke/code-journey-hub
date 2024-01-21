@@ -83,7 +83,7 @@ const App = () => {
     };
 
     fetchData();
-  }, []);
+  });
 
   let routes;
   if (isLoggedIn) {
