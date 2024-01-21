@@ -9,7 +9,6 @@ server.use(express.json());
 server.use(cors());
 
 /*routes*/
-
 server.get("/api/refresh-token", userController.refreshToken);
 server.post("/api/check-token-expiry", userController.checkTokenExpiry);
 

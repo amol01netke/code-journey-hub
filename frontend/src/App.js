@@ -19,15 +19,6 @@ const App = () => {
   const [storedToken, setStoredToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    const localToken = localStorage.getItem("token");
-
-    if (!isTokenExpired(localToken)) {
-      setStoredToken(localToken);
-      setIsLoggedIn(true);
-    }
-  }, []);
-
   const refreshToken = async (token) => {
     try {
       const response = await fetch(
@@ -43,6 +34,7 @@ const App = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setStoredToken(data.newToken);
       } else {
         const error = await response.json();
@@ -66,6 +58,7 @@ const App = () => {
 
       if (response.ok) {
         const data = await response.json();
+
         if (data.isExpired) {
           await refreshToken(token);
           setIsLoggedIn(true);
@@ -78,6 +71,15 @@ const App = () => {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    const localToken = localStorage.getItem("token");
+
+    if (!isTokenExpired(localToken)) {
+      setStoredToken(localToken);
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   let routes;
   if (isLoggedIn) {

@@ -55,7 +55,7 @@ const checkTokenExpiry = async (req, res) => {
     const { token } = req.body;
 
     if (!token) {
-      return res.status(404).json({ error: "Token is missing" });
+      return res.status(400).json({ error: "Token is missing" });
     }
 
     try {
@@ -67,13 +67,12 @@ const checkTokenExpiry = async (req, res) => {
         }
       );
 
-      const expirationTime = decodedToken.exp * 1000; // Convert seconds to milliseconds
-
+      const expirationTime = decodedToken.exp * 1000;
       const currentTime = Date.now();
 
       res.status(200).json({ isExpired: currentTime > expirationTime });
     } catch (error) {
-      res.status(404).json({ error: "Error!" });
+      res.status(500).json({ error: "Internal Server Error." });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error." });
