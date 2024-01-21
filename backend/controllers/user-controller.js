@@ -4,9 +4,13 @@ const User = require(`../models/user.js`);
 
 //functions
 const isNameValid = (firstName, lastName) => {
-  const nameRegex = /^[^\s][a-zA-Z\s]+[^\s]$/;
-  return nameRegex.test(firstName + " " + lastName);
+  // The name should not contain any whitespaces and should consist of letters
+  const nameRegex = /^[a-zA-Z]+$/;
+
+  // Check if both first and last names match the regex
+  return nameRegex.test(firstName) && nameRegex.test(lastName);
 };
+
 
 const isEmailValid = (email) => {
   const emailRegex = /^[^\s@]+@gmail\.com$/;
@@ -156,31 +160,33 @@ const loginUser = async (req, res) => {
   }
 };
 
-const registerUser = async (req, res) => {
+cconst registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
+    // Validate name
     if (!isNameValid(firstName, lastName)) {
-      return res
-        .status(400)
-        .json({ error: "Name should not contain any whitespaces." });
+      return res.status(400).json({ error: "Invalid name format." });
     }
 
+    // Validate email
     if (!isEmailValid(email)) {
-      return res.status(400).json({ error: "Please provide a valid email." });
+      return res.status(400).json({ error: "Invalid email address." });
     }
 
+    // Validate password
     if (!isPasswordValid(password)) {
-      return res
-        .status(400)
-        .json({ error: "Password should be 6 to 8 characters." });
+      return res.status(400).json({ error: "Invalid password format." });
     }
 
+    // Check if user with the same email already exists
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
+      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      // Create a new user
       const user = await User.create({
         firstName,
         lastName,
@@ -188,14 +194,23 @@ const registerUser = async (req, res) => {
         password: hashedPassword,
       });
 
+      // Generate a token
       const token = createToken(user._id);
 
-      res.status(201).json({ message: "User registered successfully!", token });
+      // Send a success response
+      return res.status(201).json({
+        message: "User registered successfully!",
+        token,
+      });
     } else {
+      // User with the same email already exists
       return res.status(400).json({ error: "Email is already registered." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error." });
+    console.error("Registration error:", error);
+
+    // Send an internal server error response
+    return res.status(500).json({ error: "Internal Server Error." });
   }
 };
 

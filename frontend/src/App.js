@@ -38,7 +38,7 @@ const App = () => {
         setStoredToken(data.newToken);
       } else {
         const error = await response.json();
-        console.log(error.error);
+        console.log(error);
       }
     } catch (error) {
       console.log(error.message);
@@ -65,7 +65,7 @@ const App = () => {
         }
       } else {
         const error = await response.json();
-        console.log(error.error);
+        console.log(error);
       }
     } catch (error) {
       console.log(error.message);
