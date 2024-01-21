@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 const EditAccount = (props) => {
-  const userToken = props.token;
-
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -21,7 +19,7 @@ const EditAccount = (props) => {
             method: "GET",
             headers: {
               "content-type": "application/json",
-              Authorization: `Bearer ${userToken}`,
+              Authorization: `Bearer ${props.token}`,
             },
           }
         );
@@ -45,7 +43,7 @@ const EditAccount = (props) => {
     };
 
     fetchUserProfile();
-  }, [userToken]);
+  }, [props.token]);
 
   const enableInput = (e, id) => {
     e.preventDefault();
@@ -68,7 +66,7 @@ const EditAccount = (props) => {
           method: "PUT",
           headers: {
             "content-type": "application/json",
-            Authorization: `Bearer ${userToken}`,
+            Authorization: `Bearer ${props.token}`,
           },
           body: JSON.stringify(formData),
         }
