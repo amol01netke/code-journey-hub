@@ -11,7 +11,6 @@ const isNameValid = (firstName, lastName) => {
   return nameRegex.test(firstName) && nameRegex.test(lastName);
 };
 
-
 const isEmailValid = (email) => {
   const emailRegex = /^[^\s@]+@gmail\.com$/;
   return emailRegex.test(email) && email.length <= 30;
@@ -160,7 +159,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-cconst registerUser = async (req, res) => {
+const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
