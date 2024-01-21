@@ -79,7 +79,7 @@ const App = () => {
       setStoredToken(localToken);
       setIsLoggedIn(true);
     }
-  }, []);
+  }, [isTokenExpired]);
 
   let routes;
   if (isLoggedIn) {
