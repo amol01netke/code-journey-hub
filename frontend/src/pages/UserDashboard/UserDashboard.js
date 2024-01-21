@@ -8,7 +8,6 @@ import { faCopy, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const UserDashboard = (props) => {
   const linkRef = useRef(null);
-  const userToken = props.token;
 
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
@@ -38,7 +37,7 @@ const UserDashboard = (props) => {
             method: "GET",
             headers: {
               "content-type": "application/json",
-              Authorization: `Bearer ${userToken}`,
+              Authorization: `Bearer ${props.token}`,
             },
           }
         );
@@ -82,7 +81,7 @@ const UserDashboard = (props) => {
     };
 
     fetchUserProfile();
-  }, [userToken]);
+  }, [props.token]);
 
   const deleteProfile = async (data, platform) => {
     try {
