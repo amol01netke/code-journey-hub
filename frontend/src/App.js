@@ -73,13 +73,17 @@ const App = () => {
   };
 
   useEffect(() => {
-    const localToken = localStorage.getItem("token");
+    const fetchData = async () => {
+      const localToken = localStorage.getItem("token");
 
-    if (!isTokenExpired(localToken)) {
-      setStoredToken(localToken);
-      setIsLoggedIn(true);
-    }
-  }, [isTokenExpired]);
+      if (localToken && !(await isTokenExpired(localToken))) {
+        setStoredToken(localToken);
+        setIsLoggedIn(true);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   let routes;
   if (isLoggedIn) {
