@@ -163,29 +163,25 @@ const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    // Validate name
     if (!isNameValid(firstName, lastName)) {
-      return res.status(400).json({ error: "Invalid name format." });
+      return res.status(400).json({ error: "Name cannot have whitespaces." });
     }
 
-    // Validate email
     if (!isEmailValid(email)) {
-      return res.status(400).json({ error: "Invalid email address." });
+      return res.status(400).json({ error: "Please enter a valid email." });
     }
 
-    // Validate password
     if (!isPasswordValid(password)) {
-      return res.status(400).json({ error: "Invalid password format." });
+      return res
+        .status(400)
+        .json({ error: "Password should be 6 to 8 characters." });
     }
 
-    // Check if user with the same email already exists
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
-      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create a new user
       const user = await User.create({
         firstName,
         lastName,
@@ -193,23 +189,18 @@ const registerUser = async (req, res) => {
         password: hashedPassword,
       });
 
-      // Generate a token
       const token = createToken(user._id);
 
-      // Send a success response
       return res.status(201).json({
         message: "User registered successfully!",
         token,
       });
     } else {
-      // User with the same email already exists
       return res.status(400).json({ error: "Email is already registered." });
     }
   } catch (error) {
-    console.error("Registration error:", error);
-
-    // Send an internal server error response
-    return res.status(500).json({ error: "Internal Server Error." });
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error." });
   }
 };
 
