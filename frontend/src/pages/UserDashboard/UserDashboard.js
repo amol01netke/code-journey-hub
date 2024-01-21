@@ -91,7 +91,7 @@ const UserDashboard = (props) => {
           method: "DELETE",
           headers: {
             "content-type": "application/json",
-            Authorization: `Bearer ${userToken}`,
+            Authorization: `Bearer ${props.token}`,
           },
           body: JSON.stringify(data),
         }
