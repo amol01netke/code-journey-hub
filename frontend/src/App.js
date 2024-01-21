@@ -36,6 +36,7 @@ const App = () => {
         const data = await response.json();
         console.log(data);
         setStoredToken(data.newToken);
+        return true;
       } else {
         const error = await response.json();
         console.log(error);
@@ -58,11 +59,7 @@ const App = () => {
 
       if (response.ok) {
         const data = await response.json();
-
-        if (data.isExpired) {
-          await refreshToken(token);
-          setIsLoggedIn(true);
-        }
+        return data.isExpired;
       } else {
         const error = await response.json();
         console.log(error);
@@ -76,14 +73,25 @@ const App = () => {
     const fetchData = async () => {
       const localToken = localStorage.getItem("token");
 
-      if (localToken && !(await isTokenExpired(localToken))) {
-        setStoredToken(localToken);
-        setIsLoggedIn(true);
+      if (localToken) {
+        const isExpired = await isTokenExpired(localToken);
+
+        if (isExpired) {
+          const refreshed = await refreshToken(localToken);
+
+          if (refreshed) {
+            setIsLoggedIn(true);
+            return;
+          }
+        } else {
+          setStoredToken(localToken);
+          setIsLoggedIn(true);
+        }
       }
     };
 
     fetchData();
-  });
+  }, []);
 
   let routes;
   if (isLoggedIn) {
